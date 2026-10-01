@@ -239,19 +239,24 @@ function initRefreshment(){
 
   setSelectOptions(refreshmentRole);
 
-  if(!refreshment?.date || !Array.isArray(refreshment.questions) || !refreshment.questions.length){
-    refreshmentSetupNote.textContent='Refreshment belum siap. Isi date dan questions pada data.js terlebih dahulu.';
+  const selectedRole=refreshmentRole?.value || Object.keys(refreshment?.questions || {})[0] || '';
+  const roleQuestions=selectedRole ? (refreshment?.questions?.[selectedRole] || []) : [];
+
+  if(!refreshment?.date || !Array.isArray(roleQuestions) || !roleQuestions.length){
+    refreshmentSetupNote.textContent='Refreshment belum siap. Pastikan tanggal dan 10 soal untuk role ini sudah diisi di data.js.';
     startRefreshmentBtn.disabled=true;
     startRefreshmentBtn.style.opacity='.55';
     return;
   }
 
-  refreshmentSetupNote.textContent=`${refreshment.questions.length} soal tersedia untuk Refreshment ini.`;
+  refreshmentSetupNote.textContent=`${roleQuestions.length} soal tersedia untuk ${roleName(selectedRole)}.`;
   startRefreshmentBtn.disabled=false;
+  startRefreshmentBtn.style.opacity='1';
 }
 
 function renderRefreshmentQuestions(){
-  const list=Array.isArray(refreshment?.questions) ? refreshment.questions : [];
+  const role=refreshmentRole?.value;
+  const list=(refreshment?.questions && role) ? (refreshment.questions[role] || []) : [];
   refreshmentProgress.textContent=`${list.length} soal • Pilih satu jawaban untuk setiap soal`;
 
   refreshmentList.innerHTML=list.length ? list.map((q,qi)=>`
@@ -301,8 +306,9 @@ function startRefreshment(){
     refreshmentSetupNote.textContent='Kode warna wajib diisi.';
     return;
   }
-  if(!refreshment?.date || !refreshment.questions?.length){
-    refreshmentSetupNote.textContent='Refreshment belum memiliki tanggal atau soal.';
+  const roleQuestions=refreshment?.questions?.[role] || [];
+  if(!refreshment?.date || !roleQuestions.length){
+    refreshmentSetupNote.textContent='Refreshment belum memiliki tanggal atau soal untuk role yang dipilih.';
     return;
   }
 
@@ -327,8 +333,9 @@ async function submitRefreshment(){
     return;
   }
 
+  const roleQuestions=refreshment.questions[refreshmentRole.value] || [];
   const correctCount=cards.reduce((total,card,qi)=>{
-    return total + (Number(card.dataset.selected)===Number(refreshment.questions[qi].answer) ? 1 : 0);
+    return total + (Number(card.dataset.selected)===Number(roleQuestions[qi].answer) ? 1 : 0);
   },0);
 
   const totalQuestions=cards.length;
@@ -375,6 +382,7 @@ async function submitRefreshment(){
 
 if(startRefreshmentBtn) startRefreshmentBtn.addEventListener('click',startRefreshment);
 if(submitRefreshmentBtn) submitRefreshmentBtn.addEventListener('click',submitRefreshment);
+if(refreshmentRole) refreshmentRole.addEventListener('change',()=>{ if(!refreshmentStarted) initRefreshment(); });
 initRefreshment();
 
 // ==========================================================
