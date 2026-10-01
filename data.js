@@ -30,6 +30,13 @@ const modules=[
     title:'Modul TIM PACKING — Check • Scan • Pack • Verify • Handover',
     description:'Materi training untuk role TIM PACKING.',
     url:'https://drive.google.com/file/d/1yzu0bjDkiG43hxFNfC7QTSgQqasjyJpf/view?usp=sharing'
+  },
+  {
+    id:'kurir-02',
+    role:'kurir',
+    title:'Standard Photo Report',
+    description:'Standar Foto Serah Terima Box ke Customer.',
+    url:'https://drive.google.com/file/d/1-LFySdpUlGAuBqIDQsQN0ZuZqdOv3ala/view?usp=sharing'
   }
 ];
 
