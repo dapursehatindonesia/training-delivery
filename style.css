@@ -25,3 +25,133 @@ footer{position:relative;left:auto;right:auto;bottom:auto;background:#064f3e;col
 .role-badge{background:var(--role-bg);color:var(--role-color)}
 .case-role{background:var(--role-bg);color:var(--role-color)}
 .empty-state{padding:28px 20px;background:#fff;border:1px dashed #cbdcd6;border-radius:15px;color:#71827d;text-align:center;font-size:13px}
+
+
+/* ==========================================================
+   REFRESHMENT + TANYA JAWAB
+   ========================================================== */
+.hidden-panel{display:none !important}
+.refreshment-date-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:18px 20px;
+  background:#064f3e;
+  color:#fff;
+  border-radius:17px;
+  margin-bottom:14px;
+  box-shadow:0 7px 22px #003d3010
+}
+.refreshment-date-card span{font-size:10px;font-weight:900;letter-spacing:1px;color:#ffcf32}
+.refreshment-date-card strong{font-size:18px}
+.form-card{
+  padding:22px;
+  background:#fff;
+  border:1px solid #e1ece8;
+  border-radius:17px;
+  box-shadow:0 7px 22px #003d3010;
+  margin-bottom:16px
+}
+.form-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.form-card label{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.form-card label>span{font-size:11px;font-weight:900;color:#42635a}
+.form-card input,.form-card select,.form-card textarea,.qna-filter{
+  width:100%;
+  border:1px solid #d6e4df;
+  background:#fbfdfc;
+  color:#17312b;
+  border-radius:10px;
+  padding:12px 13px;
+  min-height:44px;
+  outline:none
+}
+.form-card textarea{min-height:130px;resize:vertical;line-height:1.5}
+.form-card input:focus,.form-card select:focus,.form-card textarea:focus,.qna-filter:focus{
+  border-color:#0b8062;
+  box-shadow:0 0 0 3px #0b80621a
+}
+.form-note{color:#71827d;font-size:12px;margin:2px 0 12px;line-height:1.5}
+.form-note.error{color:#b53636}
+.form-note.success{color:#08775c}
+.refreshment-quiz-panel{margin-top:12px}
+.refreshment-progress{
+  background:#eaf5f0;
+  color:#075744;
+  border-radius:12px;
+  padding:12px 14px;
+  margin-bottom:12px;
+  font-size:12px;
+  font-weight:800
+}
+.refreshment-actions{display:flex;justify-content:flex-start;margin:14px 0}
+.refreshment-answer.selected{background:#e8f5ef;border-color:#0b8062;box-shadow:inset 0 0 0 1px #0b8062}
+.result-card{
+  padding:25px;
+  background:#fff;
+  border:1px solid #d7e8e0;
+  border-radius:17px;
+  box-shadow:0 9px 24px #003d3010;
+  text-align:center
+}
+.result-score{font-size:58px;line-height:1;color:#075744;font-weight:900}
+.result-main{margin-top:8px;font-size:16px;font-weight:900;color:#17312b}
+.result-meta{margin-top:7px;color:#71827d;font-size:12px}
+.result-save{margin-top:16px;padding:10px 12px;border-radius:9px;font-size:12px;font-weight:800}
+.result-save.success{background:#e7f6ef;color:#08775c}
+.result-save.warning{background:#fff7e2;color:#8a6300}
+
+.qna-layout{display:grid;grid-template-columns:1fr;gap:16px}
+.qna-form-head{margin-bottom:8px}
+.qna-form-head h3,.qna-list-head h3{margin:5px 0 14px;font-size:20px;color:#17312b}
+.qna-list-wrap{min-width:0}
+.qna-list-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px
+}
+.qna-filter{width:auto;min-width:150px}
+.qna-list{display:grid;gap:12px}
+.qna-card{
+  background:#fff;
+  border:1px solid #e1ece8;
+  border-radius:17px;
+  padding:20px;
+  box-shadow:0 7px 22px #003d3010
+}
+.qna-card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;font-size:12px}
+.qna-dot{color:#9ab0a8;margin:0 4px}
+.qna-role{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900}
+.qna-date{color:#899b95;font-size:10px;white-space:nowrap}
+.qna-question{font-size:15px;line-height:1.6;color:#2f5147;margin:14px 0}
+.qna-status{display:inline-flex;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:900}
+.qna-status.answered{background:#e7f6ef;color:#08775c}
+.qna-status.open{background:#fff7e2;color:#8a6300}
+.qna-answer{
+  margin-top:13px;
+  padding:14px;
+  background:#f2f8f5;
+  border-left:4px solid #ffcf32;
+  border-radius:9px
+}
+.qna-answer b{font-size:12px;color:#075744}
+.qna-answer p{margin:7px 0 0;color:#48655c;font-size:13px;line-height:1.6}
+.form-actions{display:flex;flex-wrap:wrap;gap:9px}
+.loading-state{padding:28px 20px;background:#fff;border-radius:15px;color:#71827d;text-align:center;font-size:13px}
+
+@media(min-width:561px){
+  .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form-grid label:last-child:nth-child(3){grid-column:1 / -1}
+  .qna-layout{grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr)}
+  .form-card{padding:24px}
+}
+
+@media(min-width:901px){
+  .refreshment-date-card{padding:20px 24px}
+  .form-card{padding:28px}
+  .qna-card{padding:24px 26px}
+  .qna-form-head h3,.qna-list-head h3{font-size:23px}
+  .result-score{font-size:68px}
+}

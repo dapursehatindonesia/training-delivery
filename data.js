@@ -1,7 +1,7 @@
 const roles={
   korlap:{name:'KORLAP',desc:'Control • Monitor • Action',color:'#c64039',bg:'#fbe9e8'},
   kurir:{name:'KURIR',desc:'Tepat • Cepat • Aman • Sopan • Lapor',color:'#08775c',bg:'#e5f5ed'},
-  packing:{name:'TIM PACKING',desc:'Check • Scan • Pack • Verify • Handover',color:'#2b6fb6',bg:'#e7f0ff'}  
+  packing:{name:'TIM PACKING',desc:'Check • Scan • Pack • Verify • Handover',color:'#2b6fb6',bg:'#e7f0ff'}
 };
 
 // ==========================================================
@@ -13,22 +13,22 @@ const modules=[
   {
     id:'korlap-01',
     role:'korlap',
-    title:'Control • Monitor • Action',
-    description:'Modul KORLAP.',
+    title:'Modul KORLAP — Control • Monitor • Action',
+    description:'Materi training untuk role KORLAP.',
     url:'https://drive.google.com/file/d/17aQHbSqbH1TWKSXLS7bvEzdiVfQa7O9S/view?usp=sharing'
   },
   {
     id:'kurir-01',
     role:'kurir',
-    title:'Tepat • Cepat • Aman • Sopan • Lapor',
-    description:'Modul KURIR.',
+    title:'Modul KURIR — Tepat • Cepat • Aman • Sopan • Lapor',
+    description:'Materi training untuk role KURIR.',
     url:'https://drive.google.com/file/d/1aGjVy_7KYAew7Cujpgihun-ThePBIIKh/view?usp=sharing'
   },
   {
     id:'packing-01',
     role:'packing',
-    title:'Check • Scan • Pack • Verify • Handover',
-    description:'Modul TIM PACKING.',
+    title:'Modul TIM PACKING — Check • Scan • Pack • Verify • Handover',
+    description:'Materi training untuk role TIM PACKING.',
     url:'https://drive.google.com/file/d/1yzu0bjDkiG43hxFNfC7QTSgQqasjyJpf/view?usp=sharing'
   }
 ];
@@ -122,3 +122,22 @@ packing:[
 ]
 };
 
+
+
+// ==========================================================
+// REFRESHMENT
+// Satu menu Refreshment. Update DATE + QUESTIONS setiap minggu.
+// Format tanggal: YYYY-MM-DD
+// ==========================================================
+const refreshment={
+  date:'2026-10-01',
+  questions:[
+    // Contoh format:
+    // {
+    //   question:'Tulis pertanyaan Refreshment di sini.',
+    //   options:['Pilihan A','Pilihan B','Pilihan C','Pilihan D'],
+    //   answer:0,
+    //   explanation:'Penjelasan jawaban jika diperlukan.'
+    // }
+  ]
+};

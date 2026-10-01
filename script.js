@@ -1,51 +1,99 @@
-const navTargets=['home','modules','cases','quiz'];
+// ==========================================================
+// SUPABASE CONFIG
+// Publishable key aman untuk frontend/browser.
+// JANGAN masukkan Secret Key / service_role key ke file ini.
+// ==========================================================
+const SUPABASE_URL='https://nxhjzltpfkkfhukjaizv.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_rvBG_MK5XpMkL_SqZru9Cg_ZPtSyce0';
+
+const supabaseClient=window.supabase
+  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY)
+  : null;
+
+// ==========================================================
+// NAVIGATION
+// ==========================================================
+const navTargets=['home','modules','cases','quiz','refreshment','qna'];
 const navButtons=[...document.querySelectorAll('.nav')];
 const mobileButtons=[...document.querySelectorAll('.mobile-nav button')];
-const sectionEls=navTargets.map(id=>document.getElementById(id));
+const sectionEls=navTargets.map(id=>document.getElementById(id)).filter(Boolean);
 
-// Setiap menu adalah satu tampilan sendiri. Setelah menu dipilih,
-// hanya isi menu tersebut yang terlihat dan dapat di-scroll ke bawah.
 function showSection(id){
   sectionEls.forEach(section=>section.classList.toggle('active-section',section.id===id));
   navButtons.forEach(button=>button.classList.toggle('active',button.dataset.target===id));
   mobileButtons.forEach(button=>button.classList.toggle('active',button.dataset.target===id));
   const main=document.querySelector('main');
   if(main) main.scrollTo({top:0,behavior:'smooth'});
+
+  if(id==='qna') loadQna();
 }
 
 document.querySelectorAll('[data-target]').forEach(el=>{
   el.addEventListener('click',()=>showSection(el.dataset.target));
 });
 
-// Helpers
+// ==========================================================
+// HELPERS
+// ==========================================================
 function roleName(role){ return roles[role]?.name || role; }
+
 function roleStyle(role){
   const r=roles[role] || {};
   return `--role-color:${r.color || '#075744'};--role-bg:${r.bg || '#eef6f2'};`;
 }
 
-// Home role strip — otomatis mengikuti role yang ada di data.js
+function escapeHtml(value){
+  return String(value ?? '')
+    .replaceAll('&','&amp;')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
+    .replaceAll("'","&#039;");
+}
+
+function setSelectOptions(select, includeAll=false){
+  if(!select) return;
+  const options=Object.entries(roles).map(([key,r])=>
+    `<option value="${escapeHtml(key)}">${escapeHtml(r.name)}</option>`
+  );
+  if(includeAll) options.unshift('<option value="all">Semua Role</option>');
+  select.innerHTML=options.join('');
+}
+
+// ==========================================================
+// HOME ROLE STRIP
+// ==========================================================
 const roleStrip=document.getElementById('roleStrip');
 if(roleStrip){
   roleStrip.innerHTML=Object.entries(roles).map(([key,r])=>`
-    <div><b>${r.name}</b><small>${r.desc}</small></div>
+    <div style="${roleStyle(key)}">
+      <b>${escapeHtml(r.name)}</b>
+      <small>${escapeHtml(r.desc)}</small>
+    </div>
   `).join('');
 }
 
-// Modules — satu role boleh punya banyak modul.
+// ==========================================================
+// MODULES — satu role boleh punya banyak modul.
+// ==========================================================
 const moduleCards=document.getElementById('moduleCards');
-moduleCards.innerHTML=modules.map(m=>{
-  const r=roles[m.role] || {name:m.role,desc:'',color:'#075744',bg:'#eef6f2'};
-  return `<article class="card">
-    <span class="role-badge" style="${roleStyle(m.role)}">${r.name}</span>
-    <h3>${m.title}</h3>
-    <p class="module-desc">${m.description || ''}</p>
-    <a class="drive" href="${m.url}" target="_blank" rel="noopener">Buka Modul ↗</a>
-  </article>`;
-}).join('');
+if(moduleCards){
+  moduleCards.innerHTML=modules.map(m=>{
+    const r=roles[m.role] || {name:m.role,desc:'',color:'#075744',bg:'#eef6f2'};
+    return `<article class="card">
+      <span class="role-badge" style="${roleStyle(m.role)}">${escapeHtml(r.name)}</span>
+      <h3>${escapeHtml(m.title)}</h3>
+      <p class="module-desc">${escapeHtml(m.description || '')}</p>
+      <a class="drive" href="${escapeHtml(m.url)}" target="_blank" rel="noopener">Buka Modul ↗</a>
+    </article>`;
+  }).join('');
+}
 
-// Case study — role otomatis mengikuti object roles.
+// ==========================================================
+// CASE STUDY
+// ==========================================================
 let currentCaseRole=Object.keys(roles)[0];
+
 function renderCaseTabs(){
   const tabData=Object.keys(roles).filter(k=>Array.isArray(cases[k]));
   if(!tabData.length){
@@ -54,33 +102,54 @@ function renderCaseTabs(){
     return;
   }
   if(!tabData.includes(currentCaseRole)) currentCaseRole=tabData[0];
-  document.getElementById('caseTabs').innerHTML=tabData.map(k=>`<button class="tab ${k===currentCaseRole?'active':''}" onclick="setCaseRole('${k}')">${roleName(k)}</button>`).join('');
+  document.getElementById('caseTabs').innerHTML=tabData.map(k=>
+    `<button class="tab ${k===currentCaseRole?'active':''}" onclick="setCaseRole('${k}')">${escapeHtml(roleName(k))}</button>`
+  ).join('');
 }
+
 function renderCases(){
   renderCaseTabs();
   const list=cases[currentCaseRole] || [];
-  document.getElementById('caseList').innerHTML=list.length ? list.map((c,i)=>`<article class="case-card">
-    <div class="case-top"><span class="case-tag">${c[0] || `CASE ${String(i+1).padStart(2,'0')}`}</span><span class="case-role" style="${roleStyle(currentCaseRole)}">${roleName(currentCaseRole)}</span></div>
-    <h3>${c[1]}</h3>
-    <p class="case-situation">${c[2]}</p>
-    <p class="case-explain"><b>Penjelasan singkat:</b> ${c[3]}</p>
-    <button class="solution-toggle" onclick="toggleSolution(this)">Lihat Penyelesaian ▾</button>
-    <div class="solution"><b>PENYELESAIAN</b><br>${c[4]}</div>
-  </article>`).join('') : '<div class="empty-state">Belum ada studi kasus untuk role ini. Tambahkan di data.js.</div>';
+  document.getElementById('caseList').innerHTML=list.length ? list.map((c,i)=>`
+    <article class="case-card">
+      <div class="case-top">
+        <span class="case-tag">${escapeHtml(c[0] || `CASE ${String(i+1).padStart(2,'0')}`)}</span>
+        <span class="case-role" style="${roleStyle(currentCaseRole)}">${escapeHtml(roleName(currentCaseRole))}</span>
+      </div>
+      <h3>${escapeHtml(c[1])}</h3>
+      <p class="case-situation">${escapeHtml(c[2])}</p>
+      <p class="case-explain"><b>Penjelasan singkat:</b> ${escapeHtml(c[3])}</p>
+      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat Penyelesaian ▾</button>
+      <div class="solution"><b>PENYELESAIAN</b><br>${escapeHtml(c[4])}</div>
+    </article>`).join('') : '<div class="empty-state">Belum ada studi kasus untuk role ini. Tambahkan di data.js.</div>';
 }
-function setCaseRole(role){currentCaseRole=role;renderCases();}
-function toggleSolution(btn){const solution=btn.nextElementSibling;const open=solution.classList.toggle('show');btn.textContent=open?'Tutup Penyelesaian ▴':'Lihat Penyelesaian ▾';}
+
+function setCaseRole(role){
+  currentCaseRole=role;
+  renderCases();
+}
+
+function toggleSolution(btn){
+  const solution=btn.nextElementSibling;
+  const open=solution.classList.toggle('show');
+  btn.textContent=open?'Tutup Penyelesaian ▴':'Lihat Penyelesaian ▾';
+}
+
 renderCases();
 
-// Quiz — jumlah soal tidak lagi hardcoded 10 dan role baru otomatis ikut.
+// ==========================================================
+// QUIZ
+// ==========================================================
 let currentQuizRole=Object.keys(roles)[0];
 const quizScores={};
 const quizAnswered={};
+
 Object.keys(roles).forEach(role=>{
   const total=(quizzes[role] || []).length;
   quizScores[role]=0;
   quizAnswered[role]=new Array(total).fill(false);
 });
+
 function renderQuizTabs(){
   const tabData=Object.keys(roles).filter(k=>Array.isArray(quizzes[k]));
   if(!tabData.length){
@@ -88,21 +157,38 @@ function renderQuizTabs(){
     return;
   }
   if(!tabData.includes(currentQuizRole)) currentQuizRole=tabData[0];
-  document.getElementById('quizTabs').innerHTML=tabData.map(k=>`<button class="tab ${k===currentQuizRole?'active':''}" onclick="setQuizRole('${k}')">${roleName(k)}</button>`).join('');
+  document.getElementById('quizTabs').innerHTML=tabData.map(k=>
+    `<button class="tab ${k===currentQuizRole?'active':''}" onclick="setQuizRole('${k}')">${escapeHtml(roleName(k))}</button>`
+  ).join('');
 }
+
 function renderQuiz(){
   renderQuizTabs();
   const list=quizzes[currentQuizRole] || [];
   document.getElementById('quizRoleLabel').textContent=roleName(currentQuizRole);
   document.getElementById('quizScore').textContent=`${quizScores[currentQuizRole] || 0} / ${list.length} benar`;
-  document.getElementById('quizList').innerHTML=list.length ? list.map((q,qi)=>`<article class="quiz-card" data-quiz-index="${qi}">
-    <div class="qtop"><span>Soal ${qi+1} / ${list.length}</span><span>${quizAnswered[currentQuizRole]?.[qi]?'Sudah dijawab':''}</span></div>
-    <h3>${q[0]}</h3>
-    <div>${q[1].map((a,i)=>`<button class="ans" data-answer="${i}" ${quizAnswered[currentQuizRole]?.[qi]?'disabled':''} onclick="answerQuiz(${qi},${i},this)">${String.fromCharCode(65+i)}. ${a}</button>`).join('')}</div>
-    <div class="explain ${quizAnswered[currentQuizRole]?.[qi]?'':'hidden'}">${quizAnswered[currentQuizRole]?.[qi]?`<b>Jawaban benar:</b> ${q[1][q[2]]}<br><br><b>Penjelasan:</b> ${q[3]}`:''}</div>
-  </article>`).join('') : '<div class="empty-state">Belum ada kuis untuk role ini. Tambahkan di data.js.</div>';
+  document.getElementById('quizList').innerHTML=list.length ? list.map((q,qi)=>`
+    <article class="quiz-card" data-quiz-index="${qi}">
+      <div class="qtop">
+        <span>Soal ${qi+1} / ${list.length}</span>
+        <span>${quizAnswered[currentQuizRole]?.[qi]?'Sudah dijawab':''}</span>
+      </div>
+      <h3>${escapeHtml(q[0])}</h3>
+      <div>${q[1].map((a,i)=>`
+        <button class="ans" data-answer="${i}" ${quizAnswered[currentQuizRole]?.[qi]?'disabled':''} onclick="answerQuiz(${qi},${i},this)">
+          ${String.fromCharCode(65+i)}. ${escapeHtml(a)}
+        </button>`).join('')}</div>
+      <div class="explain ${quizAnswered[currentQuizRole]?.[qi]?'':'hidden'}">
+        ${quizAnswered[currentQuizRole]?.[qi]?`<b>Jawaban benar:</b> ${escapeHtml(q[1][q[2]])}<br><br><b>Penjelasan:</b> ${escapeHtml(q[3])}`:''}
+      </div>
+    </article>`).join('') : '<div class="empty-state">Belum ada kuis untuk role ini. Tambahkan di data.js.</div>';
 }
-function setQuizRole(role){currentQuizRole=role;renderQuiz();}
+
+function setQuizRole(role){
+  currentQuizRole=role;
+  renderQuiz();
+}
+
 function answerQuiz(qi,choice,button){
   if(quizAnswered[currentQuizRole][qi]) return;
   quizAnswered[currentQuizRole][qi]=true;
@@ -111,11 +197,347 @@ function answerQuiz(qi,choice,button){
   const buttons=card.querySelectorAll('.ans');
   buttons.forEach(b=>b.disabled=true);
   buttons[q[2]].classList.add('correct');
-  if(choice!==q[2]) button.classList.add('wrong'); else quizScores[currentQuizRole]++;
+  if(choice!==q[2]) button.classList.add('wrong');
+  else quizScores[currentQuizRole]++;
   card.querySelector('.qtop span:last-child').textContent='Sudah dijawab';
   const explanation=card.querySelector('.explain');
-  explanation.innerHTML=`<b>Jawaban benar:</b> ${q[1][q[2]]}<br><br><b>Penjelasan:</b> ${q[3]}`;
+  explanation.innerHTML=`<b>Jawaban benar:</b> ${escapeHtml(q[1][q[2]])}<br><br><b>Penjelasan:</b> ${escapeHtml(q[3])}`;
   explanation.classList.remove('hidden');
   document.getElementById('quizScore').textContent=`${quizScores[currentQuizRole]} / ${quizzes[currentQuizRole].length} benar`;
 }
+
 renderQuiz();
+
+// ==========================================================
+// REFRESHMENT
+// ==========================================================
+const refreshmentDateLabel=document.getElementById('refreshmentDateLabel');
+const refreshmentRole=document.getElementById('refreshmentRole');
+const refreshmentName=document.getElementById('refreshmentName');
+const refreshmentColorCode=document.getElementById('refreshmentColorCode');
+const refreshmentSetupNote=document.getElementById('refreshmentSetupNote');
+const startRefreshmentBtn=document.getElementById('startRefreshmentBtn');
+const refreshmentQuizPanel=document.getElementById('refreshmentQuizPanel');
+const refreshmentList=document.getElementById('refreshmentList');
+const refreshmentProgress=document.getElementById('refreshmentProgress');
+const submitRefreshmentBtn=document.getElementById('submitRefreshmentBtn');
+const refreshmentResult=document.getElementById('refreshmentResult');
+
+let refreshmentStarted=false;
+
+function formatRefreshmentDate(dateString){
+  if(!dateString) return 'Tanggal belum diatur';
+  const d=new Date(`${dateString}T00:00:00`);
+  if(Number.isNaN(d.getTime())) return dateString;
+  return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'long',year:'numeric'}).format(d);
+}
+
+function initRefreshment(){
+  if(!refreshmentDateLabel) return;
+
+  refreshmentDateLabel.textContent=formatRefreshmentDate(refreshment?.date);
+
+  setSelectOptions(refreshmentRole);
+
+  if(!refreshment?.date || !Array.isArray(refreshment.questions) || !refreshment.questions.length){
+    refreshmentSetupNote.textContent='Refreshment belum siap. Isi date dan questions pada data.js terlebih dahulu.';
+    startRefreshmentBtn.disabled=true;
+    startRefreshmentBtn.style.opacity='.55';
+    return;
+  }
+
+  refreshmentSetupNote.textContent=`${refreshment.questions.length} soal tersedia untuk Refreshment ini.`;
+  startRefreshmentBtn.disabled=false;
+}
+
+function renderRefreshmentQuestions(){
+  const list=Array.isArray(refreshment?.questions) ? refreshment.questions : [];
+  refreshmentProgress.textContent=`${list.length} soal • Pilih satu jawaban untuk setiap soal`;
+
+  refreshmentList.innerHTML=list.length ? list.map((q,qi)=>`
+    <article class="quiz-card refreshment-question-card" data-refreshment-index="${qi}">
+      <div class="qtop">
+        <span>Soal ${qi+1} / ${list.length}</span>
+        <span>Belum dijawab</span>
+      </div>
+      <h3>${escapeHtml(q.question)}</h3>
+      <div>
+        ${(q.options || []).map((option,i)=>`
+          <button type="button" class="ans refreshment-answer" data-question="${qi}" data-answer="${i}">
+            ${String.fromCharCode(65+i)}. ${escapeHtml(option)}
+          </button>`).join('')}
+      </div>
+    </article>`).join('') : '<div class="empty-state">Belum ada soal Refreshment.</div>';
+
+  refreshmentList.querySelectorAll('.refreshment-answer').forEach(button=>{
+    button.addEventListener('click',()=>{
+      const qi=Number(button.dataset.question);
+      const card=button.closest('.quiz-card');
+      card.querySelectorAll('.refreshment-answer').forEach(btn=>btn.classList.remove('selected'));
+      button.classList.add('selected');
+      card.dataset.selected=button.dataset.answer;
+      card.querySelector('.qtop span:last-child').textContent='Sudah dipilih';
+    });
+  });
+}
+
+function startRefreshment(){
+  const name=refreshmentName?.value.trim();
+  const role=refreshmentRole?.value;
+  const colorCode=refreshmentColorCode?.value.trim();
+
+  if(!name){
+    refreshmentName.focus();
+    refreshmentSetupNote.textContent='Nama wajib diisi.';
+    return;
+  }
+  if(!role){
+    refreshmentRole.focus();
+    refreshmentSetupNote.textContent='Role wajib dipilih.';
+    return;
+  }
+  if(!colorCode){
+    refreshmentColorCode.focus();
+    refreshmentSetupNote.textContent='Kode warna wajib diisi.';
+    return;
+  }
+  if(!refreshment?.date || !refreshment.questions?.length){
+    refreshmentSetupNote.textContent='Refreshment belum memiliki tanggal atau soal.';
+    return;
+  }
+
+  refreshmentStarted=true;
+  refreshmentSetupNote.textContent='';
+  renderRefreshmentQuestions();
+  refreshmentQuizPanel.classList.remove('hidden-panel');
+  refreshmentResult.classList.add('hidden-panel');
+  refreshmentQuizPanel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function submitRefreshment(){
+  if(!refreshmentStarted) return;
+
+  const cards=[...refreshmentList.querySelectorAll('.refreshment-question-card')];
+  const unanswered=cards.findIndex(card=>card.dataset.selected===undefined);
+
+  if(unanswered!==-1){
+    cards[unanswered].scrollIntoView({behavior:'smooth',block:'center'});
+    const card=cards[unanswered];
+    card.querySelector('.qtop span:last-child').textContent='Wajib dijawab';
+    return;
+  }
+
+  const correctCount=cards.reduce((total,card,qi)=>{
+    return total + (Number(card.dataset.selected)===Number(refreshment.questions[qi].answer) ? 1 : 0);
+  },0);
+
+  const totalQuestions=cards.length;
+  const score=totalQuestions ? Math.round((correctCount/totalQuestions)*100) : 0;
+
+  submitRefreshmentBtn.disabled=true;
+  submitRefreshmentBtn.textContent='Menyimpan...';
+
+  let saveMessage='Hasil dihitung di perangkat.';
+  let saveOk=false;
+
+  if(supabaseClient){
+    const payload={
+      refreshment_date:refreshment.date,
+      name:refreshmentName.value.trim(),
+      role:roleName(refreshmentRole.value),
+      color_code:refreshmentColorCode.value.trim(),
+      score,
+      total_questions:totalQuestions
+    };
+
+    const {error}=await supabaseClient.from('refreshment_results').insert(payload);
+    if(error){
+      saveMessage='Nilai tampil, tetapi penyimpanan ke database gagal. Coba lagi atau cek koneksi Supabase.';
+      console.error('Refreshment save error:',error);
+    }else{
+      saveOk=true;
+      saveMessage='✓ Hasil berhasil tersimpan.';
+    }
+  }else{
+    saveMessage='Supabase belum terhubung.';
+  }
+
+  refreshmentResult.innerHTML=`
+    <div class="result-score">${score}</div>
+    <div class="result-main">${correctCount} / ${totalQuestions} benar</div>
+    <div class="result-meta">${escapeHtml(refreshmentName.value.trim())} • ${escapeHtml(roleName(refreshmentRole.value))}</div>
+    <div class="result-save ${saveOk?'success':'warning'}">${saveMessage}</div>
+  `;
+  refreshmentResult.classList.remove('hidden-panel');
+  submitRefreshmentBtn.textContent='Tersimpan';
+  refreshmentResult.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+if(startRefreshmentBtn) startRefreshmentBtn.addEventListener('click',startRefreshment);
+if(submitRefreshmentBtn) submitRefreshmentBtn.addEventListener('click',submitRefreshment);
+initRefreshment();
+
+// ==========================================================
+// TANYA JAWAB
+// Peserta: SELECT + INSERT questions
+// Website: SELECT answers
+// Trainer menjawab dari Supabase Dashboard.
+// ==========================================================
+const qnaName=document.getElementById('qnaName');
+const qnaRole=document.getElementById('qnaRole');
+const qnaQuestion=document.getElementById('qnaQuestion');
+const qnaSubmitBtn=document.getElementById('qnaSubmitBtn');
+const qnaRefreshBtn=document.getElementById('qnaRefreshBtn');
+const qnaFormMessage=document.getElementById('qnaFormMessage');
+const qnaFilterRole=document.getElementById('qnaFilterRole');
+const qnaList=document.getElementById('qnaList');
+
+let qnaData=[];
+
+function initQna(){
+  setSelectOptions(qnaRole);
+  setSelectOptions(qnaFilterRole,true);
+}
+
+function setQnaMessage(message,type=''){
+  if(!qnaFormMessage) return;
+  qnaFormMessage.textContent=message;
+  qnaFormMessage.className=`form-note ${type}`;
+}
+
+async function loadQna(){
+  if(!qnaList) return;
+
+  if(!supabaseClient){
+    qnaList.innerHTML='<div class="empty-state">Supabase belum terhubung.</div>';
+    return;
+  }
+
+  qnaList.innerHTML='<div class="loading-state">Memuat pertanyaan...</div>';
+
+  const [questionsRes,answersRes]=await Promise.all([
+    supabaseClient.from('questions').select('id,name,role,question,status,created_at').order('created_at',{ascending:false}),
+    supabaseClient.from('answers').select('id,question_id,answer,answered_by,created_at').order('created_at',{ascending:false})
+  ]);
+
+  if(questionsRes.error){
+    console.error('Questions load error:',questionsRes.error);
+    qnaList.innerHTML='<div class="empty-state">Pertanyaan belum dapat dimuat. Cek RLS atau koneksi Supabase.</div>';
+    return;
+  }
+
+  if(answersRes.error){
+    console.error('Answers load error:',answersRes.error);
+  }
+
+  const latestAnswers=new Map();
+  (answersRes.data || []).forEach(answer=>{
+    if(!latestAnswers.has(answer.question_id)){
+      latestAnswers.set(answer.question_id,answer);
+    }
+  });
+
+  qnaData=(questionsRes.data || []).map(question=>({
+    ...question,
+    reply:latestAnswers.get(question.id) || null
+  }));
+
+  renderQnaList();
+}
+
+function renderQnaList(){
+  if(!qnaList) return;
+  const filter=qnaFilterRole?.value || 'all';
+  const list=qnaData.filter(item=>filter==='all' || item.role===roleName(filter) || item.role===filter);
+
+  if(!list.length){
+    qnaList.innerHTML='<div class="empty-state">Belum ada pertanyaan untuk filter ini.</div>';
+    return;
+  }
+
+  qnaList.innerHTML=list.map(item=>{
+    const answered=Boolean(item.reply);
+    const roleKey=Object.keys(roles).find(key=>roleName(key)===item.role) || item.role;
+    const date=item.created_at ? new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(item.created_at)) : '';
+    return `<article class="qna-card">
+      <div class="qna-card-top">
+        <div>
+          <b>${escapeHtml(item.name)}</b>
+          <span class="qna-dot">•</span>
+          <span class="qna-role" style="${roleStyle(roleKey)}">${escapeHtml(item.role)}</span>
+        </div>
+        <span class="qna-date">${escapeHtml(date)}</span>
+      </div>
+
+      <p class="qna-question">“${escapeHtml(item.question)}”</p>
+
+      <div class="qna-status ${answered?'answered':'open'}">
+        ${answered?'🟢 Sudah Dijawab':'🟡 Menunggu Jawaban'}
+      </div>
+
+      ${answered?`
+        <div class="qna-answer">
+          <b>↳ ${escapeHtml(item.reply.answered_by || 'Trainer')}</b>
+          <p>${escapeHtml(item.reply.answer)}</p>
+        </div>`:''}
+    </article>`;
+  }).join('');
+}
+
+async function submitQna(){
+  const name=qnaName?.value.trim();
+  const role=qnaRole?.value;
+  const question=qnaQuestion?.value.trim();
+
+  if(!name){
+    setQnaMessage('Nama wajib diisi.','error');
+    qnaName.focus();
+    return;
+  }
+  if(!role){
+    setQnaMessage('Role wajib dipilih.','error');
+    qnaRole.focus();
+    return;
+  }
+  if(!question){
+    setQnaMessage('Pertanyaan wajib diisi.','error');
+    qnaQuestion.focus();
+    return;
+  }
+
+  if(!supabaseClient){
+    setQnaMessage('Supabase belum terhubung.','error');
+    return;
+  }
+
+  qnaSubmitBtn.disabled=true;
+  qnaSubmitBtn.textContent='Mengirim...';
+  setQnaMessage('');
+
+  const {error}=await supabaseClient.from('questions').insert({
+    name,
+    role:roleName(role),
+    question,
+    status:'open'
+  });
+
+  qnaSubmitBtn.disabled=false;
+  qnaSubmitBtn.textContent='Kirim Pertanyaan';
+
+  if(error){
+    console.error('Question insert error:',error);
+    setQnaMessage('Pertanyaan gagal dikirim. Cek RLS atau koneksi Supabase.','error');
+    return;
+  }
+
+  qnaQuestion.value='';
+  setQnaMessage('✓ Pertanyaan berhasil dikirim.','success');
+  await loadQna();
+}
+
+if(qnaSubmitBtn) qnaSubmitBtn.addEventListener('click',submitQna);
+if(qnaRefreshBtn) qnaRefreshBtn.addEventListener('click',loadQna);
+if(qnaFilterRole) qnaFilterRole.addEventListener('change',renderQnaList);
+
+initQna();
+loadQna();
