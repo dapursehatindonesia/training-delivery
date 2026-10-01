@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Healthy Go — Delivery Training Center</title>
+<link rel="icon" type="image/png" href="logo_hg_hijau_cut.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,11 +14,12 @@
     <div><b>Delivery Training Center</b></div>
   </div>
   <nav>
-    <button class="nav active" data-target="home">⌂ <span>Beranda</span></button>
-    <button class="nav" data-target="modules">▤ <span>Daftar Modul</span></button>
-    <button class="nav" data-target="cases">◇ <span>Studi Kasus</span></button>
-    <button class="nav" data-target="quiz">✓ <span>Kuis</span></button>
-    <button class="nav" data-target="refreshment">↻ <span>Refreshment</span></button>    <button class="nav" data-target="qna">? <span>Tanya Jawab</span></button>
+    <button class="nav active" data-target="home">⌂ <span>Home</span></button>
+    <button class="nav" data-target="modules">▤ <span>Modules</span></button>
+    <button class="nav" data-target="cases">◇ <span>Cases</span></button>
+    <button class="nav" data-target="quiz">✓ <span>Quiz</span></button>
+    <button class="nav" data-target="refreshment">↻ <span>Refreshment</span></button>
+    <button class="nav" data-target="qna">? <span>Ask Trainer</span></button>
   </nav>
   <div class="sidefoot">Healthy Go<br><small>Learn • Practice • Improve</small></div>
 </aside>
@@ -25,12 +27,12 @@
 <header class="mobile-top">
   <div class="mobile-brand"><img class="hg-logo" src="logo%20hg%20putih_cut.png" alt="Healthy Go"><div><b>Delivery Training Center</b></div></div>
   <nav class="mobile-nav">
-    <button data-target="home">Beranda</button>
-    <button data-target="modules">Modul</button>
-    <button data-target="cases">Kasus</button>
-    <button data-target="quiz">Kuis</button>
+    <button data-target="home">Home</button>
+    <button data-target="modules">Modules</button>
+    <button data-target="cases">Cases</button>
+    <button data-target="quiz">Quiz</button>
     <button data-target="refreshment">Refreshment</button>
-    <button data-target="qna">Tanya Jawab</button>
+    <button data-target="qna">Ask Trainer</button>
   </nav>
 </header>
 
@@ -44,11 +46,12 @@
         <button class="primary" data-target="modules">Mulai Belajar →</button>
       </div>
       <div class="hero-card">
-        <span>TRAINING FLOW</span>
+        <span>ALUR TRAINING</span>
         <div class="flow-item"><b>01</b><span>Materi Modul</span></div>
         <div class="flow-item"><b>02</b><span>Studi Kasus</span></div>
         <div class="flow-item"><b>03</b><span>Kuis</span></div>
-        <div class="flow-item"><b>04</b><span>Review Hasil</span></div>
+        <div class="flow-item"><b>04</b><span>Refreshment</span></div>
+        <div class="flow-item"><b>05</b><span>Tanya Trainer</span></div>
       </div>
     </div>
     <div class="strip" id="roleStrip"></div>
@@ -56,18 +59,18 @@
 
   <section id="modules" class="section">
     <div class="heading">
-      <span class="eyebrow">01 • DAFTAR MODUL</span>
-      <h2>Pilih Modul Training</h2>
-      <p>Setiap modul dibuka langsung dari Google Drive. Satu role dapat memiliki lebih dari satu modul.</p>
+      <span class="eyebrow">01 • LIST MODULES</span>
+      <h2>Daftar Modul Training</h2>
+      <p>Pilih modul yang tersedia.</p>
     </div>
     <div class="cards" id="moduleCards"></div>
   </section>
 
   <section id="cases" class="section">
     <div class="heading">
-      <span class="eyebrow">02 • STUDI KASUS</span>
+      <span class="eyebrow">02 • CASE STUDY</span>
       <h2>Studi Kasus & Penyelesaian</h2>
-      <p>Pilih role. Baca situasi, pahami penjelasan singkat, lalu buka penyelesaiannya bila diperlukan.</p>
+      <p>Pilih role. Baca situasi, pahami penjelasan singkat, lalu buka penyelesaiannya bila diperlukan. Semua SDM <b>WAJIB</b> paham.</b></p>
     </div>
     <div class="tabs" id="caseTabs"></div>
     <div id="caseList" class="case-list"></div>
@@ -75,9 +78,9 @@
 
   <section id="quiz" class="section">
     <div class="heading">
-      <span class="eyebrow">03 • KUIS</span>
+      <span class="eyebrow">03 • QUIS</span>
       <h2>Quiz Training</h2>
-      <p>Pilih role, jawab soal, lalu lihat jawaban dan penjelasannya. Jumlah soal dapat berbeda untuk setiap role.</p>
+      <p>Pilih role, jawab soal, lalu lihat jawaban dan penjelasannya. Kuis ini digunakan untuk latihan.</p>
     </div>
     <div class="tabs" id="quizTabs"></div>
     <div class="quiz-summary"><b id="quizRoleLabel">KORLAP</b><span id="quizScore">0 / 10 benar</span></div>
@@ -88,7 +91,7 @@
     <div class="heading">
       <span class="eyebrow">04 • REFRESHMENT</span>
       <h2>Refreshment Training</h2>
-      <p>Satu Refreshment aktif. Tanggal dan soal diperbarui melalui <b>data.js</b> setiap minggu.</p>
+      <p>Info pengerjaan dan update refreshment akan diinfokan di grup.</p>
     </div>
 
     <div class="refreshment-date-card">
@@ -123,7 +126,7 @@
       <div id="refreshmentList" class="quiz-list"></div>
 
       <div class="refreshment-actions">
-        <button id="submitRefreshmentBtn" class="primary">Submit Refreshment</button>
+        <button id="submitRefreshmentBtn" class="primary">Submit</button>
       </div>
 
       <div id="refreshmentResult" class="result-card hidden-panel"></div>
@@ -132,9 +135,9 @@
 
   <section id="qna" class="section">
     <div class="heading">
-      <span class="eyebrow">05 • TANYA JAWAB</span>
+      <span class="eyebrow">05 • ASK TRAINER</span>
       <h2>Tanya Jawab</h2>
-      <p>Ajukan pertanyaan seputar pekerjaan atau training. Trainer menjawab melalui Supabase, lalu jawabannya tampil di sini.</p>
+      <p>Ajukan pertanyaan seputar pekerjaan atau training. Tunggu jawaban dari trainer, dan jawaban akan tampil di sini.</p>
     </div>
 
     <div class="qna-layout">
@@ -174,7 +177,7 @@
       <div class="qna-list-wrap">
         <div class="qna-list-head">
           <div>
-            <span class="eyebrow">FAQ AKTUAL</span>
+            <span class="eyebrow">LIVE QNA</span>
             <h3>Pertanyaan & Jawaban</h3>
           </div>
           <select id="qnaFilterRole" class="qna-filter"></select>
