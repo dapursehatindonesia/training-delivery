@@ -14,21 +14,21 @@ const modules=[
   {
     id:'korlap-01',
     role:'korlap',
-    title:'Modul Training Korlap \n Control • Monitor • Action',
+    title:'Modul Korlap: Control, Monitor, & Action',
     description:'Materi training untuk role KORLAP.',
     url:'https://drive.google.com/file/d/17aQHbSqbH1TWKSXLS7bvEzdiVfQa7O9S/view?usp=sharing'
   },
   {
     id:'kurir-01',
     role:'kurir',
-    title:'Modul Training Kurir \n Tepat • Cepat • Aman • Sopan • Lapor',
+    title:'Modul Kurir: Zero Complaint, The Power of Excellent Service',
     description:'Materi training untuk role KURIR.',
     url:'https://drive.google.com/file/d/1aGjVy_7KYAew7Cujpgihun-ThePBIIKh/view?usp=sharing'
   },
   {
     id:'packing-01',
     role:'packing',
-    title:'Modul Training Packing \n Check • Scan • Pack • Verify • Handover',
+    title:'Modul Packing: From Kitchen to Customer',
     description:'Materi training untuk role TIM PACKING.',
     url:'https://drive.google.com/file/d/1yzu0bjDkiG43hxFNfC7QTSgQqasjyJpf/view?usp=sharing'
   },
