@@ -53,13 +53,11 @@ function escapeHtml(value){
 
 function setSelectOptions(select, includeAll=false){
   if(!select) return;
-  const currentValue=select.value;
   const options=Object.entries(roles).map(([key,r])=>
     `<option value="${escapeHtml(key)}">${escapeHtml(r.name)}</option>`
   );
   if(includeAll) options.unshift('<option value="all">Semua Role</option>');
   select.innerHTML=options.join('');
-  if([...select.options].some(option=>option.value===currentValue)) select.value=currentValue;
 }
 
 // ==========================================================
@@ -224,7 +222,6 @@ const refreshmentList=document.getElementById('refreshmentList');
 const refreshmentProgress=document.getElementById('refreshmentProgress');
 const submitRefreshmentBtn=document.getElementById('submitRefreshmentBtn');
 const refreshmentResult=document.getElementById('refreshmentResult');
-
 let refreshmentStarted=false;
 
 function formatRefreshmentDate(dateString){
@@ -234,33 +231,48 @@ function formatRefreshmentDate(dateString){
   return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'long',year:'numeric'}).format(d);
 }
 
-function initRefreshment(){
-  if(!refreshmentDateLabel) return;
+function getRefreshmentQuestions(){
+  const role=refreshmentRole?.value || Object.keys(roles)[0];
+  const questionsByRole=refreshment?.questions || {};
+  return Array.isArray(questionsByRole[role]) ? questionsByRole[role] : [];
+}
 
-  refreshmentDateLabel.textContent=formatRefreshmentDate(refreshment?.date);
-
-  setSelectOptions(refreshmentRole);
-
-  const selectedRole=refreshmentRole?.value || Object.keys(refreshment?.questions || {})[0] || '';
-  const roleQuestions=selectedRole ? (refreshment?.questions?.[selectedRole] || []) : [];
-
-  if(!refreshment?.date || !Array.isArray(roleQuestions) || !roleQuestions.length){
-    refreshmentSetupNote.textContent='Refreshment belum siap. Pastikan tanggal dan 10 soal untuk role ini sudah diisi di data.js.';
+function updateRefreshmentAvailability(){
+  if(!refreshmentSetupNote || !startRefreshmentBtn) return;
+  const list=getRefreshmentQuestions();
+  if(!refreshment?.date){
+    refreshmentSetupNote.textContent='Tanggal Refreshment belum diatur.';
     startRefreshmentBtn.disabled=true;
     startRefreshmentBtn.style.opacity='.55';
     return;
   }
-
-  refreshmentSetupNote.textContent=`${roleQuestions.length} soal tersedia untuk ${roleName(selectedRole)}.`;
+  if(!list.length){
+    refreshmentSetupNote.textContent='Belum ada soal Refreshment untuk role ini.';
+    startRefreshmentBtn.disabled=true;
+    startRefreshmentBtn.style.opacity='.55';
+    return;
+  }
+  refreshmentSetupNote.textContent=`${list.length} soal tersedia untuk ${roleName(refreshmentRole.value)}.`;
   startRefreshmentBtn.disabled=false;
   startRefreshmentBtn.style.opacity='1';
 }
 
-function renderRefreshmentQuestions(){
-  const role=refreshmentRole?.value;
-  const list=(refreshment?.questions && role) ? (refreshment.questions[role] || []) : [];
-  refreshmentProgress.textContent=`${list.length} soal • Pilih satu jawaban untuk setiap soal`;
+function initRefreshment(){
+  if(!refreshmentDateLabel) return;
+  refreshmentDateLabel.textContent=formatRefreshmentDate(refreshment?.date);
+  setSelectOptions(refreshmentRole);
+  if(refreshmentRole){
+    refreshmentRole.addEventListener('change',()=>{
+      if(refreshmentStarted) return;
+      updateRefreshmentAvailability();
+    });
+  }
+  updateRefreshmentAvailability();
+}
 
+function renderRefreshmentQuestions(){
+  const list=getRefreshmentQuestions();
+  refreshmentProgress.textContent=`${list.length} soal • Pilih satu jawaban untuk setiap soal`;
   refreshmentList.innerHTML=list.length ? list.map((q,qi)=>`
     <article class="quiz-card refreshment-question-card" data-refreshment-index="${qi}">
       <div class="qtop">
@@ -270,9 +282,7 @@ function renderRefreshmentQuestions(){
       <h3>${escapeHtml(q.question)}</h3>
       <div>
         ${(q.options || []).map((option,i)=>`
-          <button type="button" class="ans refreshment-answer" data-question="${qi}" data-answer="${i}">
-            ${String.fromCharCode(65+i)}. ${escapeHtml(option)}
-          </button>`).join('')}
+          <button type="button" class="ans refreshment-answer" data-question="${qi}" data-answer="${i}">${String.fromCharCode(65+i)}. ${escapeHtml(option)}</button>`).join('')}
       </div>
     </article>`).join('') : '<div class="empty-state">Belum ada soal Refreshment.</div>';
 
@@ -292,6 +302,7 @@ function startRefreshment(){
   const name=refreshmentName?.value.trim();
   const role=refreshmentRole?.value;
   const colorCode=refreshmentColorCode?.value.trim();
+  const list=getRefreshmentQuestions();
 
   if(!name){
     refreshmentName.focus();
@@ -308,9 +319,8 @@ function startRefreshment(){
     refreshmentSetupNote.textContent='Kode warna wajib diisi.';
     return;
   }
-  const roleQuestions=refreshment?.questions?.[role] || [];
-  if(!refreshment?.date || !roleQuestions.length){
-    refreshmentSetupNote.textContent='Refreshment belum memiliki tanggal atau soal untuk role yang dipilih.';
+  if(!refreshment?.date || !list.length){
+    refreshmentSetupNote.textContent='Belum ada soal Refreshment untuk role ini.';
     return;
   }
 
@@ -325,23 +335,19 @@ function startRefreshment(){
 async function submitRefreshment(){
   if(!refreshmentStarted) return;
 
+  const list=getRefreshmentQuestions();
   const cards=[...refreshmentList.querySelectorAll('.refreshment-question-card')];
   const unanswered=cards.findIndex(card=>card.dataset.selected===undefined);
 
   if(unanswered!==-1){
     cards[unanswered].scrollIntoView({behavior:'smooth',block:'center'});
-    const card=cards[unanswered];
-    card.querySelector('.qtop span:last-child').textContent='Wajib dijawab';
+    cards[unanswered].querySelector('.qtop span:last-child').textContent='Wajib dijawab';
     return;
   }
 
-  const roleQuestions=refreshment.questions[refreshmentRole.value] || [];
-  const correctCount=cards.reduce((total,card,qi)=>{
-    return total + (Number(card.dataset.selected)===Number(roleQuestions[qi].answer) ? 1 : 0);
-  },0);
-
+  const correctCount=cards.reduce((total,card,qi)=>total+(Number(card.dataset.selected)===Number(list[qi].answer)?1:0),0);
   const totalQuestions=cards.length;
-  const score=totalQuestions ? Math.round((correctCount/totalQuestions)*100) : 0;
+  const score=totalQuestions?Math.round((correctCount/totalQuestions)*100):0;
 
   submitRefreshmentBtn.disabled=true;
   submitRefreshmentBtn.textContent='Menyimpan...';
@@ -353,15 +359,14 @@ async function submitRefreshment(){
     const payload={
       refreshment_date:refreshment.date,
       name:refreshmentName.value.trim(),
-      role:refreshmentRole.value,
+      role:roleName(refreshmentRole.value),
       color_code:refreshmentColorCode.value.trim(),
-      score,
-      total_questions:totalQuestions
+      score
     };
 
     const {error}=await supabaseClient.from('refreshment_results').insert(payload);
     if(error){
-      saveMessage=`Nilai tampil, tetapi penyimpanan ke database gagal: ${error.message || 'Unknown error'}`;
+      saveMessage=`Nilai tampil, tetapi penyimpanan ke database gagal: ${error.message}`;
       console.error('Refreshment save error:',error);
     }else{
       saveOk=true;
@@ -375,8 +380,7 @@ async function submitRefreshment(){
     <div class="result-score">${score}</div>
     <div class="result-main">${correctCount} / ${totalQuestions} benar</div>
     <div class="result-meta">${escapeHtml(refreshmentName.value.trim())} • ${escapeHtml(roleName(refreshmentRole.value))}</div>
-    <div class="result-save ${saveOk?'success':'warning'}">${saveMessage}</div>
-  `;
+    <div class="result-save ${saveOk?'success':'warning'}">${escapeHtml(saveMessage)}</div>`;
   refreshmentResult.classList.remove('hidden-panel');
   submitRefreshmentBtn.textContent='Tersimpan';
   refreshmentResult.scrollIntoView({behavior:'smooth',block:'center'});
@@ -384,7 +388,6 @@ async function submitRefreshment(){
 
 if(startRefreshmentBtn) startRefreshmentBtn.addEventListener('click',startRefreshment);
 if(submitRefreshmentBtn) submitRefreshmentBtn.addEventListener('click',submitRefreshment);
-if(refreshmentRole) refreshmentRole.addEventListener('change',()=>{ if(!refreshmentStarted){ refreshmentSetupNote.textContent=`${(refreshment?.questions?.[refreshmentRole.value] || []).length} soal tersedia untuk ${roleName(refreshmentRole.value)}.`; } });
 initRefreshment();
 
 // ==========================================================

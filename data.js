@@ -123,51 +123,44 @@ packing:[
 };
 
 
-
-// ==========================================================
-// REFRESHMENT
-// Ganti date setiap periode Refreshment.
-// Soal dipisahkan berdasarkan role.
-// answer = index jawaban benar, dimulai dari 0.
-// ==========================================================
 const refreshment={
   date:'2026-10-01',
   questions:{
     korlap:[
-      {question:'Kurir belum berangkat 20 menit setelah jadwal. Apa yang harus dilakukan Korlap terlebih dahulu?',options:['Langsung memberikan teguran','Cek fakta dan kondisi aktual','Menunggu complaint dari customer','Membiarkannya'],answer:1,explanation:'Langkah awal problem solving adalah CEK untuk memastikan fakta kondisi aktual.'},
-      {question:'Urutan problem solving Korlap yang sesuai adalah?',options:['Tanya → Cek → Pulang','Cek → Tanya → Putuskan → Tindak → Follow Up','Tindak → Cek → Abaikan','Lapor → Pulang → Follow Up'],answer:1,explanation:'Gunakan pola CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP.'},
-      {question:'Kurir hadir tetapi HP dan kendaraan belum siap. Status kurir tersebut adalah?',options:['READY','Belum READY','Selesai','Tidak perlu dicek'],answer:1,explanation:'READY mencakup PERSON + VEHICLE + EQUIPMENT + APPEARANCE.'},
-      {question:'Saat monitoring operasional, Korlap seharusnya?',options:['Menunggu masalah terjadi','Aktif memonitor kondisi lapangan','Hanya melihat hasil akhir bulan','Hanya menangani complaint'],answer:1,explanation:'Korlap perlu aktif memonitor kondisi operasional dan early warning.'},
-      {question:'Delivery yang tidak ter-update sebaiknya diperlakukan sebagai?',options:['Early warning','Hal yang boleh diabaikan','Hasil akhir','Bukan tanggung jawab Korlap'],answer:0,explanation:'Delivery yang tidak update merupakan early warning yang perlu ditindaklanjuti.'},
-      {question:'Saat melakukan coaching kepada kurir, fokus utama Korlap adalah?',options:['Memberikan label pribadi','Fakta, penyebab, solusi, komitmen, dan follow-up','Menunggu masalah berulang','Menghindari pembicaraan'],answer:1,explanation:'Coaching diarahkan pada fakta dan tindakan perbaikan.'},
-      {question:'Jika kendaraan kurir bermasalah saat membawa banyak box, prioritas awal adalah?',options:['Memaksa tetap berjalan','STOP dan amankan kondisi serta box','Menunggu complaint','Langsung meninggalkan box'],answer:1,explanation:'Penanganan kondisi darurat dimulai dengan STOP dan SECURE.'},
-      {question:'Jika manpower kurang sebelum operasional, tindakan yang tepat adalah?',options:['Mengabaikannya','Cek kebutuhan lalu redistribusi atau siapkan backup','Menunggu sampai shift selesai','Menghapus data attendance'],answer:1,explanation:'Kekurangan manpower perlu diketahui dan ditangani sebelum operasional berjalan.'},
-      {question:'Jika pelanggaran kurir terjadi berulang setelah coaching dan dokumentasi, apa langkah berikutnya?',options:['Tidak perlu dilakukan apa-apa','Follow-up dan eskalasi sesuai ketentuan','Langsung menghapus catatan','Mengabaikan pelanggaran'],answer:1,explanation:'Pelanggaran berulang dapat dieskalasikan sesuai ketentuan perusahaan.'},
-      {question:'Apa tujuan utama review post-operation?',options:['Sekadar menutup shift','Review, learn, improve, dan membuat action plan','Menghapus semua kendala','Menunggu complaint berikutnya'],answer:1,explanation:'POST-OPERATION digunakan untuk review, belajar, perbaikan, dan menentukan action plan berikutnya.'}
+      {question:'Kurir belum berangkat 20 menit setelah jadwal. Langkah pertama Korlap?',options:['Langsung menegur','Cek fakta kondisi aktual','Menunggu complaint','Membiarkan'],answer:1},
+      {question:'Urutan problem solving Korlap yang sesuai?',options:['Tanya → Cek → Pulang','Cek → Tanya → Putuskan → Tindak → Follow Up','Tindak → Cek → Abaikan','Lapor → Pulang → Follow Up'],answer:1},
+      {question:'Sebelum operasional, Korlap perlu memastikan apa?',options:['Hanya jumlah kurir','Attendance dan kecukupan manpower','Hanya complaint','Hanya kendaraan'],answer:1},
+      {question:'Kurir hadir tetapi HP dan kendaraan belum siap. Statusnya?',options:['READY','Belum READY','Selesai','Tidak perlu dicek'],answer:1},
+      {question:'Saat monitoring, Korlap seharusnya?',options:['Menunggu laporan masalah','Aktif memonitor kondisi lapangan','Hanya melihat akhir bulan','Hanya menangani complaint'],answer:1},
+      {question:'Sinyal “delivery tidak update” sebaiknya diperlakukan sebagai?',options:['Early warning','Masalah yang boleh diabaikan','Hasil akhir','Bukan tanggung jawab Korlap'],answer:0},
+      {question:'Dalam coaching kurir, fokus utama sebaiknya?',options:['Label pribadi','Fakta, penyebab, solusi, komitmen, follow-up','Menunggu masalah berulang','Menghindari pembicaraan'],answer:1},
+      {question:'Urutan penanganan kondisi darurat yang sesuai materi?',options:['Report → Stop → Pulang','STOP → SECURE → REPORT → SOLVE → FOLLOW UP','Solve → Ignore → Follow Up','Follow Up → Stop'],answer:1},
+      {question:'Jika pelanggaran berulang terjadi, langkah setelah coaching dan dokumentasi adalah?',options:['Tidak perlu apa-apa','Follow up dan eskalasi sesuai ketentuan bila berulang','Langsung pulang','Hapus catatan'],answer:1},
+      {question:'Apa tujuan review post-operation?',options:['Sekadar menutup shift','Review, belajar, dan membuat action plan','Menghapus semua kendala','Menunggu complaint berikutnya'],answer:1}
     ],
     kurir:[
-      {question:'Sebelum delivery, apakah hadir saja sudah cukup?',options:['Ya','Tidak, harus READY','Hanya saat kondisi ramai','Tidak perlu dicek'],answer:1,explanation:'Hadir belum tentu READY. Kesiapan harus dipastikan sebelum berangkat.'},
-      {question:'Mana yang termasuk kesiapan kendaraan?',options:['BBM cukup dan kendaraan aman','Hanya warna kendaraan','Hanya nomor kendaraan','Tidak perlu dicek'],answer:0,explanation:'Vehicle readiness mencakup kondisi kendaraan yang aman dan BBM yang cukup.'},
-      {question:'Sebelum berangkat, kurir harus memahami apa?',options:['Hanya jumlah box','Area, jumlah, customer/tujuan, dan prioritas','Hanya nama Korlap','Hanya jam pulang'],answer:1,explanation:'Kurir perlu memahami apa yang dibawa, ke mana tujuan, jumlah, dan prioritas delivery.'},
-      {question:'Apa arti prinsip delivery TEPAT?',options:['Orang, alamat, jumlah, dan pesanan sesuai','Selalu paling cepat','Datang tanpa komunikasi','Mengabaikan jumlah'],answer:0,explanation:'TEPAT mencakup orang, alamat, jumlah, dan pesanan.'},
-      {question:'Jika terjadi kendala yang memengaruhi delivery, kurir harus?',options:['Diam','Lapor','Menunggu sampai besok','Mengabaikannya'],answer:1,explanation:'LAPOR berarti segera melaporkan kendala yang memengaruhi delivery.'},
-      {question:'Saat kendaraan bermasalah ketika membawa pesanan, prioritas awal adalah?',options:['Tetap mengejar waktu tanpa berhenti','Amankan box dan kondisi, lalu laporkan','Meninggalkan box','Mengabaikan masalah'],answer:1,explanation:'Keselamatan dan keamanan box menjadi prioritas sebelum melanjutkan delivery.'},
-      {question:'Bagaimana sikap yang tepat saat customer menyampaikan complaint?',options:['Berdebat dengan customer','Tetap sopan, dengarkan, dan cek fakta/status','Langsung pergi','Menyalahkan customer'],answer:1,explanation:'Complaint ditangani dengan komunikasi yang sopan dan pengecekan fakta.'},
-      {question:'Jika alamat atau tujuan belum jelas sebelum berangkat, apa yang dilakukan?',options:['Tetap berangkat tanpa bertanya','Pastikan informasi tujuan jelas','Abaikan','Tunggu complaint'],answer:1,explanation:'Kurir harus memahami tujuan dan prioritas sebelum delivery.'},
-      {question:'Jika jumlah box yang diterima tidak sesuai penugasan, kurir sebaiknya?',options:['Langsung berangkat','Cek dan koordinasikan ketidaksesuaian','Mengubah datanya sendiri','Mengabaikannya'],answer:1,explanation:'Jumlah dan penugasan harus dipastikan sesuai sebelum melanjutkan.'},
-      {question:'Setelah delivery selesai, apa yang masih perlu dilakukan?',options:['Tidak perlu apa-apa','Pastikan status ter-update dan laporkan kejadian khusus','Langsung pulang tanpa informasi','Hapus data delivery'],answer:1,explanation:'Tugas tidak berhenti setelah sampai tujuan; status dan kejadian khusus tetap harus dilaporkan.'}
+      {question:'Sebelum delivery, hadir saja sudah cukup?',options:['Ya','Tidak, harus READY','Hanya jika ramai','Tidak perlu dicek'],answer:1},
+      {question:'Mana yang termasuk kesiapan kendaraan?',options:['BBM cukup dan kendaraan aman','Hanya warna kendaraan','Hanya nomor kendaraan','Tidak perlu dicek'],answer:0},
+      {question:'Apa yang harus dipahami sebelum berangkat?',options:['Hanya jumlah box','Apa yang dibawa, ke mana, berapa jumlahnya, dan prioritas','Hanya nama Korlap','Hanya jam pulang'],answer:1},
+      {question:'Standar delivery “TEPAT” berarti memastikan?',options:['Orang, alamat, jumlah, dan pesanan sesuai','Datang tanpa komunikasi','Selalu paling cepat','Mengabaikan jumlah'],answer:0},
+      {question:'Jika terjadi kendala yang memengaruhi delivery, tindakan yang sesuai?',options:['Diam','Lapor','Menunggu sampai besok','Mengabaikan'],answer:1},
+      {question:'Saat kendaraan bermasalah, prioritas awal?',options:['Mengejar waktu tanpa berhenti','Amankan box dan kondisi, lalu laporkan','Meninggalkan box','Mengabaikan masalah'],answer:1},
+      {question:'Saat customer complaint, kurir sebaiknya?',options:['Berdebat','Tetap sopan, dengarkan, dan cek fakta/status','Langsung pergi','Menyalahkan customer'],answer:1},
+      {question:'Jika alamat/tujuan belum jelas sebelum berangkat?',options:['Tetap berangkat tanpa bertanya','Pastikan informasi tujuan jelas','Abaikan','Tunggu complaint'],answer:1},
+      {question:'Setelah delivery selesai, yang perlu dilakukan?',options:['Tidak perlu update','Pastikan status ter-update dan laporkan kejadian khusus','Langsung pulang tanpa informasi','Hapus data'],answer:1},
+      {question:'Urutan prinsip delivery yang digunakan dalam materi adalah?',options:['Cepat, diam, selesai','TEPAT • CEPAT • AMAN • SOPAN • LAPOR','Aman saja','Sopan saja'],answer:1}
     ],
     packing:[
-      {question:'Apa prinsip scan box yang digunakan dalam proses packing?',options:['1 box = 1 scan','1 box = 2 scan','Scan jika sempat','Tidak perlu scan'],answer:0,explanation:'Rule utama adalah 1 BOX = 1 SCAN = 1 CONTROL.'},
-      {question:'Empat hal utama yang harus dicek saat menerima box adalah?',options:['Jumlah, kondisi box, label/kode, dan sesi','Harga, warna, ukuran, dan nama','Hanya label','Hanya jumlah'],answer:0,explanation:'CHECK 4 HAL terdiri dari jumlah, kondisi box, label/kode, dan sesi.'},
-      {question:'Jika label box tidak sesuai dengan order, apa tindakan yang tepat?',options:['Tetap handover','Jangan diteruskan dan pisahkan','Abaikan','Serahkan ke customer'],answer:1,explanation:'Box dengan label tidak sesuai harus ditahan dan ditangani sesuai prosedur.'},
-      {question:'Manifest menunjukkan 100 box tetapi aktual hanya 98. Apa yang dilakukan?',options:['Langsung handover','STOP → CHECK → REPORT','Menambah angka di manifest','Mengabaikan selisih'],answer:1,explanation:'Selisih jumlah harus dihentikan, dicek, dan dilaporkan.'},
-      {question:'Setelah box di-scan, apakah box otomatis READY?',options:['Ya','Tidak, masih harus melalui proses packing','Tidak perlu dicek lagi','Hanya jika kurir datang'],answer:1,explanation:'Scan bukan akhir proses; box masih harus melalui packing dan verification.'},
-      {question:'Bagaimana kondisi akhir box sebelum handover?',options:['Tertutup, aman, dan bebas benda asing','Terbuka agar mudah diperiksa','Boleh dilempar ke area kurir','Tidak perlu dicek'],answer:0,explanation:'Final condition harus tertutup, aman, dan bebas benda asing.'},
-      {question:'Apa yang harus dipastikan dalam final check sebelum handover?',options:['Jumlah box sesuai','Manifest tidak perlu dilihat','Scan tidak perlu','Label tidak perlu dicek'],answer:0,explanation:'Final check mencakup jumlah, scan, label/kode, sesi, kondisi, perlengkapan, dan manifest.'},
-      {question:'Jika box rusak atau terbuka saat diterima, apa tindakan yang tepat?',options:['Abaikan','Pisahkan lalu perbaiki atau ganti sesuai alur','Langsung handover','Sembunyikan'],answer:1,explanation:'Box bermasalah harus dipisahkan dan ditangani sesuai prosedur sebelum diteruskan.'},
-      {question:'APD yang disebut wajib untuk proses packing adalah?',options:['Masker dan hairnet','Topi bebas','Tidak ada','Sarung tangan saja'],answer:0,explanation:'Materi menyebut masker dan hairnet sebagai APD wajib.'},
-      {question:'Kapan box boleh di-handover kepada kurir?',options:['Begitu box diterima','Setelah box READY dan terverifikasi','Sebelum scan','Sebelum final check'],answer:1,explanation:'Handover dilakukan setelah CHECK → SCAN → PACK → VERIFY dan seluruh kondisi OK.'}
+      {question:'Prinsip scan untuk box adalah?',options:['1 box = 1 scan','1 box = 2 scan','Scan jika sempat','Tidak perlu scan'],answer:0},
+      {question:'Saat menerima box, empat hal yang dicek adalah?',options:['Jumlah, kondisi box, label/kode, sesi','Harga, warna, ukuran, nama','Hanya label','Hanya jumlah'],answer:0},
+      {question:'Jika label box tidak sesuai, tindakan yang tepat?',options:['Tetap handover','Jangan diteruskan','Abaikan','Serahkan ke customer'],answer:1},
+      {question:'Manifest 100, aktual 98. Apa tindakan?',options:['Langsung handover','STOP → CHECK → REPORT','Tambah angka di manifest','Abaikan'],answer:1},
+      {question:'Setelah scan, apakah box langsung READY?',options:['Ya','Tidak, masih harus masuk proses packing','Tidak perlu dicek','Hanya jika kurir datang'],answer:1},
+      {question:'Yang termasuk final condition box adalah?',options:['Tertutup, aman, bebas benda asing','Terbuka agar mudah dicek','Dilempar ke area kurir','Tidak perlu dicek'],answer:0},
+      {question:'Sebelum handover, salah satu checklist wajib adalah?',options:['Jumlah box sesuai','Mengabaikan manifest','Tidak perlu scan','Tidak perlu cek label'],answer:0},
+      {question:'Jika box rusak, prinsip penanganannya?',options:['Abaikan','Pisahkan lalu perbaiki/ganti sesuai alur','Langsung handover','Sembunyikan'],answer:1},
+      {question:'APD wajib pada proses packing yang disebut dalam materi?',options:['Masker dan hairnet','Topi bebas','Tidak ada','Sarung tangan saja'],answer:0},
+      {question:'Handover dilakukan ketika?',options:['Box baru diterima','Box READY dan sudah terverifikasi','Sebelum scan','Sebelum final check'],answer:1}
     ]
   }
 };
