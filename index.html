@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Healthy Go — Delivery Training Center</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand">
+    <div class="logo">healthy<br><b>go</b></div>
+    <div><b>Delivery Training Center</b></div>
+  </div>
+  <nav>
+    <button class="nav active" data-target="home">⌂ <span>Beranda</span></button>
+    <button class="nav" data-target="modules">▤ <span>Daftar Modul</span></button>
+    <button class="nav" data-target="cases">◇ <span>Studi Kasus</span></button>
+    <button class="nav" data-target="quiz">✓ <span>Kuis</span></button>
+  </nav>
+  <div class="sidefoot">Healthy Go<br><small>Learn • Practice • Improve</small></div>
+</aside>
+
+<header class="mobile-top">
+  <div class="mobile-brand"><div class="logo">healthy<br><b>go</b></div><div><b>Delivery Training Center</b></div></div>
+  <nav class="mobile-nav">
+    <button data-target="home">Beranda</button>
+    <button data-target="modules">Modul</button>
+    <button data-target="cases">Kasus</button>
+    <button data-target="quiz">Kuis</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="section home-section active-section">
+    <div class="hero">
+      <div>
+        <span class="eyebrow">HEALTHY GO • DELIVERY TRAINING CENTER</span>
+        <h1>Belajar untuk<br><em>bekerja lebih baik.</em></h1>
+        <p>Akses modul training, pelajari studi kasus, dan uji pemahaman melalui kuis berdasarkan role operasional.</p>
+        <button class="primary" data-target="modules">Mulai Belajar →</button>
+      </div>
+      <div class="hero-card">
+        <span>TRAINING FLOW</span>
+        <div class="flow-item"><b>01</b><span>Materi Modul</span></div>
+        <div class="flow-item"><b>02</b><span>Studi Kasus</span></div>
+        <div class="flow-item"><b>03</b><span>Kuis</span></div>
+        <div class="flow-item"><b>04</b><span>Review Hasil</span></div>
+      </div>
+    </div>
+    <div class="strip" id="roleStrip"></div>
+  </section>
+
+  <section id="modules" class="section">
+    <div class="heading">
+      <span class="eyebrow">01 • DAFTAR MODUL</span>
+      <h2>Pilih Modul Training</h2>
+      <p>Setiap modul dibuka langsung dari Google Drive. Satu role dapat memiliki lebih dari satu modul.</p>
+    </div>
+    <div class="cards" id="moduleCards"></div>
+  </section>
+
+  <section id="cases" class="section">
+    <div class="heading">
+      <span class="eyebrow">02 • STUDI KASUS</span>
+      <h2>Studi Kasus & Penyelesaian</h2>
+      <p>Pilih role. Baca situasi, pahami penjelasan singkat, lalu buka penyelesaiannya bila diperlukan.</p>
+    </div>
+    <div class="tabs" id="caseTabs"></div>
+    <div id="caseList" class="case-list"></div>
+  </section>
+
+  <section id="quiz" class="section">
+    <div class="heading">
+      <span class="eyebrow">03 • KUIS</span>
+      <h2>Quiz Training</h2>
+      <p>Pilih role, jawab soal, lalu lihat jawaban dan penjelasannya. Jumlah soal dapat berbeda untuk setiap role.</p>
+    </div>
+    <div class="tabs" id="quizTabs"></div>
+    <div class="quiz-summary"><b id="quizRoleLabel">KORLAP</b><span id="quizScore">0 / 10 benar</span></div>
+    <div id="quizList" class="quiz-list"></div>
+  </section>
+</main>
+
+<footer>Healthy Go Delivery Training Center <span>© 2026</span></footer>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

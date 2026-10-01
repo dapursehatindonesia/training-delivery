@@ -1,0 +1,52 @@
+PANDUAN TAMBAH ROLE / MODUL / CASE / QUIZ
+Healthy Go - Delivery Training Center
+
+1. TAMBAH ROLE
+Di data.js, tambahkan di dalam const roles:
+
+  admin:{
+    name:'ADMIN DELIVERY',
+    desc:'Accurate • Organized • Responsive',
+    color:'#7b4bb7',
+    bg:'#f1e9fa'
+  }
+
+2. TAMBAH MODUL
+Di const modules, tambahkan object baru. role harus sama dengan id role.
+
+  {
+    id:'admin-01',
+    role:'admin',
+    title:'Modul Dasar Admin Delivery',
+    description:'Materi training untuk ADMIN DELIVERY.',
+    url:'LINK_GOOGLE_DRIVE'
+  }
+
+Kalau ADMIN punya 3 modul, buat 3 object dengan role:'admin'.
+
+3. TAMBAH CASE
+Di const cases, tambahkan key baru sesuai id role:
+
+admin:[
+  ['CASE 01','Judul case','Situasi','Penjelasan','Penyelesaian'],
+  ['CASE 02','Judul case 2','Situasi 2','Penjelasan 2','Penyelesaian 2']
+]
+
+4. TAMBAH QUIZ
+Di const quizzes, tambahkan key baru sesuai id role:
+
+admin:[
+  ['Pertanyaan?', ['Pilihan A','Pilihan B','Pilihan C','Pilihan D'], 1, 'Penjelasan jawaban']
+]
+
+Angka answer dimulai dari 0:
+0 = pilihan A
+1 = pilihan B
+2 = pilihan C
+3 = pilihan D
+
+5. TIDAK PERLU MENGUBAH
+- index.html
+- script.js
+
+Website otomatis membaca role, modul, case, dan quiz dari data.js.
