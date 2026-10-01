@@ -1,7 +1,8 @@
 const roles={
   korlap:{name:'KORLAP',desc:'Control • Monitor • Action',color:'#c64039',bg:'#fbe9e8'},
   kurir:{name:'KURIR',desc:'Tepat • Cepat • Aman • Sopan • Lapor',color:'#08775c',bg:'#e5f5ed'},
-  packing:{name:'TIM PACKING',desc:'Check • Scan • Pack • Verify • Handover',color:'#2b6fb6',bg:'#e7f0ff'}
+  packing:{name:'TIM PACKING',desc:'Check • Scan • Pack • Verify • Handover',color:'#2b6fb6',bg:'#e7f0ff'},
+  all:{name:'ALL',desc:'ALL',color:'#6d28d9',bg:'#ede9fe'}
 };
 
 // ==========================================================
@@ -13,22 +14,29 @@ const modules=[
   {
     id:'korlap-01',
     role:'korlap',
-    title:'Modul KORLAP — Control • Monitor • Action',
+    title:'Modul Training Korlap \n Control • Monitor • Action',
     description:'Materi training untuk role KORLAP.',
     url:'https://drive.google.com/file/d/17aQHbSqbH1TWKSXLS7bvEzdiVfQa7O9S/view?usp=sharing'
   },
   {
     id:'kurir-01',
     role:'kurir',
-    title:'Modul KURIR — Tepat • Cepat • Aman • Sopan • Lapor',
+    title:'Modul Training Kurir \n Tepat • Cepat • Aman • Sopan • Lapor',
     description:'Materi training untuk role KURIR.',
     url:'https://drive.google.com/file/d/1aGjVy_7KYAew7Cujpgihun-ThePBIIKh/view?usp=sharing'
   },
   {
     id:'packing-01',
     role:'packing',
-    title:'Modul TIM PACKING — Check • Scan • Pack • Verify • Handover',
+    title:'Modul Training Packing \n Check • Scan • Pack • Verify • Handover',
     description:'Materi training untuk role TIM PACKING.',
+    url:'https://drive.google.com/file/d/1yzu0bjDkiG43hxFNfC7QTSgQqasjyJpf/view?usp=sharing'
+  },
+  {
+    id:'all-01',
+    role:'all',
+    title:'Standard Photo Report',
+    description:'Standar Foto Serah Terima ke Customer.',
     url:'https://drive.google.com/file/d/1yzu0bjDkiG43hxFNfC7QTSgQqasjyJpf/view?usp=sharing'
   }
 ];
