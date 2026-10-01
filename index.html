@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delivery HG Training Center</title>
+<title>Healthy Go — Delivery Training Center</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,6 +17,7 @@
     <button class="nav" data-target="modules">▤ <span>Daftar Modul</span></button>
     <button class="nav" data-target="cases">◇ <span>Studi Kasus</span></button>
     <button class="nav" data-target="quiz">✓ <span>Kuis</span></button>
+    <button class="nav" data-target="refreshment">↻ <span>Refreshment</span></button>    <button class="nav" data-target="qna">? <span>Tanya Jawab</span></button>
   </nav>
   <div class="sidefoot">Healthy Go<br><small>Learn • Practice • Improve</small></div>
 </aside>
@@ -28,6 +29,8 @@
     <button data-target="modules">Modul</button>
     <button data-target="cases">Kasus</button>
     <button data-target="quiz">Kuis</button>
+    <button data-target="refreshment">Refreshment</button>
+    <button data-target="qna">Tanya Jawab</button>
   </nav>
 </header>
 
@@ -55,7 +58,7 @@
     <div class="heading">
       <span class="eyebrow">01 • DAFTAR MODUL</span>
       <h2>Pilih Modul Training</h2>
-      <p>Pilih modul sesuai role.</p>
+      <p>Setiap modul dibuka langsung dari Google Drive. Satu role dapat memiliki lebih dari satu modul.</p>
     </div>
     <div class="cards" id="moduleCards"></div>
   </section>
@@ -64,7 +67,7 @@
     <div class="heading">
       <span class="eyebrow">02 • STUDI KASUS</span>
       <h2>Studi Kasus & Penyelesaian</h2>
-      <p>Pilih role. Baca situasi, pahami penjelasan singkat, lalu buka penyelesaiannya.</p>
+      <p>Pilih role. Baca situasi, pahami penjelasan singkat, lalu buka penyelesaiannya bila diperlukan.</p>
     </div>
     <div class="tabs" id="caseTabs"></div>
     <div id="caseList" class="case-list"></div>
@@ -80,8 +83,110 @@
     <div class="quiz-summary"><b id="quizRoleLabel">KORLAP</b><span id="quizScore">0 / 10 benar</span></div>
     <div id="quizList" class="quiz-list"></div>
   </section>
-<footer>Healthy Go • Delivery Training Center <span>© 2026</span></footer>
+
+  <section id="refreshment" class="section">
+    <div class="heading">
+      <span class="eyebrow">04 • REFRESHMENT</span>
+      <h2>Refreshment Training</h2>
+      <p>Satu Refreshment aktif. Tanggal dan soal diperbarui melalui <b>data.js</b> setiap minggu.</p>
+    </div>
+
+    <div class="refreshment-date-card">
+      <span>TANGGAL REFRESHMENT</span>
+      <strong id="refreshmentDateLabel">-</strong>
+    </div>
+
+    <div id="refreshmentStartPanel" class="form-card">
+      <div class="form-grid">
+        <label>
+          <span>Nama</span>
+          <input id="refreshmentName" type="text" maxlength="120" placeholder="Masukkan nama">
+        </label>
+
+        <label>
+          <span>Role</span>
+          <select id="refreshmentRole"></select>
+        </label>
+
+        <label>
+          <span>Kode Warna</span>
+          <input id="refreshmentColorCode" type="text" maxlength="60" placeholder="Masukkan kode warna">
+        </label>
+      </div>
+
+      <p id="refreshmentSetupNote" class="form-note"></p>
+      <button id="startRefreshmentBtn" class="primary">Mulai Refreshment →</button>
+    </div>
+
+    <div id="refreshmentQuizPanel" class="refreshment-quiz-panel hidden-panel">
+      <div class="refreshment-progress" id="refreshmentProgress"></div>
+      <div id="refreshmentList" class="quiz-list"></div>
+
+      <div class="refreshment-actions">
+        <button id="submitRefreshmentBtn" class="primary">Submit Refreshment</button>
+      </div>
+
+      <div id="refreshmentResult" class="result-card hidden-panel"></div>
+    </div>
+  </section>
+
+  <section id="qna" class="section">
+    <div class="heading">
+      <span class="eyebrow">05 • TANYA JAWAB</span>
+      <h2>Tanya Jawab</h2>
+      <p>Ajukan pertanyaan seputar pekerjaan atau training. Trainer menjawab melalui Supabase, lalu jawabannya tampil di sini.</p>
+    </div>
+
+    <div class="qna-layout">
+      <div class="form-card">
+        <div class="qna-form-head">
+          <div>
+            <span class="eyebrow">ASK TRAINER</span>
+            <h3>Ajukan Pertanyaan</h3>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            <span>Nama</span>
+            <input id="qnaName" type="text" maxlength="120" placeholder="Masukkan nama">
+          </label>
+
+          <label>
+            <span>Role</span>
+            <select id="qnaRole"></select>
+          </label>
+        </div>
+
+        <label>
+          <span>Pertanyaan</span>
+          <textarea id="qnaQuestion" maxlength="1000" placeholder="Tulis pertanyaan kamu..."></textarea>
+        </label>
+
+        <div class="form-actions">
+          <button id="qnaSubmitBtn" class="primary">Kirim Pertanyaan</button>
+          <button id="qnaRefreshBtn" class="ghost" type="button">↻ Refresh</button>
+        </div>
+
+        <p id="qnaFormMessage" class="form-note"></p>
+      </div>
+
+      <div class="qna-list-wrap">
+        <div class="qna-list-head">
+          <div>
+            <span class="eyebrow">FAQ AKTUAL</span>
+            <h3>Pertanyaan & Jawaban</h3>
+          </div>
+          <select id="qnaFilterRole" class="qna-filter"></select>
+        </div>
+        <div id="qnaList" class="qna-list"></div>
+      </div>
+    </div>
+  </section>
+
+<footer>Healthy Go Delivery Training Center <span>© 2026</span></footer>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data.js"></script>
 <script src="script.js"></script>
 </body>
