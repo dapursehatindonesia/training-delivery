@@ -2,7 +2,7 @@ const roles={
   korlap:{name:'KORLAP',desc:'Control • Monitor • Action',color:'#c64039',bg:'#fbe9e8'},
   kurir:{name:'KURIR',desc:'Tepat • Cepat • Aman • Sopan • Lapor',color:'#08775c',bg:'#e5f5ed'},
   packing:{name:'TIM PACKING',desc:'Check • Scan • Pack • Verify • Handover',color:'#2b6fb6',bg:'#e7f0ff'},
-  all:{name:'ALL',desc:'ALL',color:'#6d28d9',bg:'#ede9fe'}
+  all:{name:'ALL',desc:'Deliver the Healthiness',color:'#6d28d9',bg:'#ede9fe'}
 };
 
 // ==========================================================
