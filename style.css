@@ -8,8 +8,8 @@ a{-webkit-tap-highlight-color:transparent}
 .mobile-brand{display:flex;align-items:center;gap:9px;min-width:0}.mobile-brand .hg-logo{width:58px;height:42px;flex:0 0 58px}.mobile-brand>div:last-child{font-size:13px;line-height:1.15;white-space:nowrap}.mobile-brand small{display:block;color:#b9d6ce;font-size:9px;margin-top:3px}
 .hg-logo{width:58px;height:46px;object-fit:contain;display:block;flex:0 0 auto}
 .mobile-nav{display:flex;gap:6px;overflow-x:auto;width:100%;padding:0 0 2px;scrollbar-width:none}.mobile-nav::-webkit-scrollbar{display:none}.mobile-nav button{border:1px solid #ffffff25;background:#ffffff0b;color:#dcebe7;padding:8px 11px;border-radius:9px;white-space:nowrap;font-size:11px;font-weight:800;cursor:pointer}.mobile-nav button.active{background:#ffcf32;color:#064f3e;border-color:#ffcf32}
-main{margin:0;height:calc(100vh - 96px);overflow-y:auto;overflow-x:hidden;padding-bottom:0;-webkit-overflow-scrolling:touch}
-.section{width:100%;max-width:1450px;min-height:100%;margin:0 auto;padding:38px 16px 72px;display:none}.section.active-section{display:block}.home-section{min-height:100%;flex-direction:column;justify-content:center}.section.active-section.home-section{display:flex}
+main{margin:0;height:calc(100vh - 96px);overflow-y:auto;overflow-x:hidden;padding-top:24px;padding-bottom:105px;-webkit-overflow-scrolling:touch}
+.section{width:100%;max-width:1450px;min-height:100%;margin:0 auto;padding:38px 16px 72px;display:none}.section.active-section{display:block}.home-section{min-height:100%;flex-direction:column;justify-content:center;padding-top:54px}.section.active-section.home-section{display:flex}
 .hero{min-height:auto;display:flex;flex-direction:column;gap:28px;align-items:stretch}.eyebrow{font-size:10px;font-weight:900;letter-spacing:1.2px;color:#d39f00}.hero h1{font-size:clamp(38px,11vw,54px);line-height:1.03;margin:15px 0}.hero em{font-style:normal;color:#0b8062}.hero p,.heading p{color:#667872;line-height:1.65}.hero p{font-size:16px;max-width:650px}.primary,.ghost{border:0;border-radius:11px;padding:14px 18px;font-weight:800;cursor:pointer;min-height:46px}.primary{background:#ffcf32;color:#064f3e}.ghost{background:#fff;border:1px solid #d3e3dd;color:#064f3e}
 .hero-card{background:#064f3e;color:#fff;border-radius:20px;padding:22px;box-shadow:0 14px 32px #003d3020}.hero-card>span{font-size:10px;color:#ffcf32;font-weight:800}.flow-item{display:flex;align-items:center;gap:10px;margin:15px 0;font-size:14px}.flow-item b{display:grid;place-items:center;background:#0d8668;width:34px;height:34px;border-radius:9px;font-size:10px;flex:0 0 34px}
 .strip,.cards{display:grid;grid-template-columns:1fr;gap:12px}.strip div{padding:16px;background:#fff;border-radius:15px;box-shadow:0 7px 20px #003d3010}.strip b,.strip small{display:block}.strip b{color:#08775c}.strip small{color:#71827d;margin-top:4px;font-size:12px}
@@ -154,4 +154,34 @@ footer{position:relative;left:auto;right:auto;bottom:auto;background:#064f3e;col
   .qna-card{padding:24px 26px}
   .qna-form-head h3,.qna-list-head h3{font-size:23px}
   .result-score{font-size:68px}
+}
+
+
+/* ==========================================================
+   TANYA TRAINER — FLOATING POPUP
+   ========================================================== */
+.trainer-fab{
+  position:fixed;
+  right:10px;
+  bottom:10px;
+  z-index:50;
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+  border:1px solid #d6e4df;
+  background:#fff;
+  color:#075744;
+  padding:8px 11px;
+  border-radius:999px;
+  box-shadow:0 10px 28px #003d3030;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+  min-height:34px;
+}
+.trainer-fab:hover{transform:translateY(-1px);box-shadow:0 13px 30px #003d3038}
+@media(min-width:901px){
+  main{padding-top:0}
+  .home-section{padding-top:78px}
+  .trainer-fab{right:18px;bottom:16px;padding:8px 11px;font-size:10px}
 }

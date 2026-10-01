@@ -19,6 +19,9 @@ const mobileButtons=[...document.querySelectorAll('.mobile-nav button')];
 const sectionEls=navTargets.map(id=>document.getElementById(id)).filter(Boolean);
 
 function showSection(id){
+  if(refreshmentStarted && id!=='refreshment'){
+    return;
+  }
   sectionEls.forEach(section=>section.classList.toggle('active-section',section.id===id));
   navButtons.forEach(button=>button.classList.toggle('active',button.dataset.target===id));
   mobileButtons.forEach(button=>button.classList.toggle('active',button.dataset.target===id));
@@ -393,6 +396,7 @@ async function submitRefreshment(){
     <div class="result-main">${correctCount} / ${totalQuestions} benar</div>
     <div class="result-meta">${escapeHtml(refreshmentName.value.trim())} • ${escapeHtml(roleName(refreshmentRole.value))}</div>
     <div class="result-save ${saveOk?'success':'warning'}">${escapeHtml(saveMessage)}</div>`;
+  refreshmentStarted=false;
   refreshmentResult.classList.remove('hidden-panel');
   submitRefreshmentBtn.textContent='Tersimpan';
   refreshmentResult.scrollIntoView({behavior:'smooth',block:'center'});
