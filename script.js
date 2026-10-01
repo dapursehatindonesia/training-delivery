@@ -53,11 +53,13 @@ function escapeHtml(value){
 
 function setSelectOptions(select, includeAll=false){
   if(!select) return;
+  const currentValue=select.value;
   const options=Object.entries(roles).map(([key,r])=>
     `<option value="${escapeHtml(key)}">${escapeHtml(r.name)}</option>`
   );
   if(includeAll) options.unshift('<option value="all">Semua Role</option>');
   select.innerHTML=options.join('');
+  if([...select.options].some(option=>option.value===currentValue)) select.value=currentValue;
 }
 
 // ==========================================================
@@ -351,7 +353,7 @@ async function submitRefreshment(){
     const payload={
       refreshment_date:refreshment.date,
       name:refreshmentName.value.trim(),
-      role:roleName(refreshmentRole.value),
+      role:refreshmentRole.value,
       color_code:refreshmentColorCode.value.trim(),
       score,
       total_questions:totalQuestions
@@ -359,7 +361,7 @@ async function submitRefreshment(){
 
     const {error}=await supabaseClient.from('refreshment_results').insert(payload);
     if(error){
-      saveMessage='Nilai tampil, tetapi penyimpanan ke database gagal. Coba lagi atau cek koneksi Supabase.';
+      saveMessage=`Nilai tampil, tetapi penyimpanan ke database gagal: ${error.message || 'Unknown error'}`;
       console.error('Refreshment save error:',error);
     }else{
       saveOk=true;
@@ -382,7 +384,7 @@ async function submitRefreshment(){
 
 if(startRefreshmentBtn) startRefreshmentBtn.addEventListener('click',startRefreshment);
 if(submitRefreshmentBtn) submitRefreshmentBtn.addEventListener('click',submitRefreshment);
-if(refreshmentRole) refreshmentRole.addEventListener('change',()=>{ if(!refreshmentStarted) initRefreshment(); });
+if(refreshmentRole) refreshmentRole.addEventListener('change',()=>{ if(!refreshmentStarted){ refreshmentSetupNote.textContent=`${(refreshment?.questions?.[refreshmentRole.value] || []).length} soal tersedia untuk ${roleName(refreshmentRole.value)}.`; } });
 initRefreshment();
 
 // ==========================================================
