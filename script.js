@@ -257,14 +257,26 @@ function updateRefreshmentAvailability(){
   startRefreshmentBtn.style.opacity='1';
 }
 
+function resetRefreshmentSession(){
+  refreshmentStarted=false;
+  if(refreshmentQuizPanel) refreshmentQuizPanel.classList.add('hidden-panel');
+  if(refreshmentResult) refreshmentResult.classList.add('hidden-panel');
+  if(refreshmentList) refreshmentList.innerHTML='';
+  if(submitRefreshmentBtn){
+    submitRefreshmentBtn.disabled=false;
+    submitRefreshmentBtn.textContent='Kirim Hasil';
+  }
+  updateRefreshmentAvailability();
+}
+
 function initRefreshment(){
   if(!refreshmentDateLabel) return;
   refreshmentDateLabel.textContent=formatRefreshmentDate(refreshment?.date);
   setSelectOptions(refreshmentRole);
   if(refreshmentRole){
     refreshmentRole.addEventListener('change',()=>{
-      if(refreshmentStarted) return;
-      updateRefreshmentAvailability();
+      resetRefreshmentSession();
+      if(refreshmentSetupNote) refreshmentSetupNote.textContent='Role berubah. Refreshment dimulai kembali dari awal.';
     });
   }
   updateRefreshmentAvailability();
