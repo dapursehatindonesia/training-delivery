@@ -13,7 +13,7 @@ const supabaseClient=window.supabase
 // ==========================================================
 // NAVIGATION
 // ==========================================================
-const navTargets=['home','modules','cases','quiz','refreshment','qna'];
+const navTargets=['home','gallery','modules','cases','quiz','refreshment','qna'];
 const navButtons=[...document.querySelectorAll('.nav')];
 const mobileButtons=[...document.querySelectorAll('.mobile-nav button')];
 const sectionEls=navTargets.map(id=>document.getElementById(id)).filter(Boolean);
@@ -405,6 +405,46 @@ async function submitRefreshment(){
 if(startRefreshmentBtn) startRefreshmentBtn.addEventListener('click',startRefreshment);
 if(submitRefreshmentBtn) submitRefreshmentBtn.addEventListener('click',submitRefreshment);
 initRefreshment();
+
+// ==========================================================
+// GALLERY
+// Courier Standard menjadi salah satu kategori di Gallery.
+// ==========================================================
+const galleryTabs=document.getElementById('galleryTabs');
+const galleryGrid=document.getElementById('galleryGrid');
+let currentGalleryCategory='Top Kurir of the Month';
+
+function renderGallery(){
+  if(!galleryTabs || !galleryGrid) return;
+  const categories=[...new Set((galleryItems || []).map(item=>item.category))];
+  if(!categories.length){
+    galleryTabs.innerHTML='';
+    galleryGrid.innerHTML='<div class="empty-state">Belum ada konten gallery.</div>';
+    return;
+  }
+  if(!categories.includes(currentGalleryCategory)) currentGalleryCategory=categories[0];
+  galleryTabs.innerHTML=categories.map(category=>`<button class="tab ${category===currentGalleryCategory?'active':''}" onclick="setGalleryCategory('${escapeHtml(category)}')">${escapeHtml(category)}</button>`).join('');
+  const list=(galleryItems || []).filter(item=>item.category===currentGalleryCategory);
+  galleryGrid.innerHTML=list.map(item=>`
+    <article class="gallery-card">
+      <div class="gallery-image-wrap">
+        <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title || 'Gallery')}" onerror="this.style.opacity='0.15';">
+      </div>
+      <div class="gallery-card-body">
+        ${item.period ? `<span class="gallery-period">${escapeHtml(item.period)}</span>` : ''}
+        ${item.title ? `<h3>${escapeHtml(item.title)}</h3>` : ''}
+        ${item.name ? `<b>${escapeHtml(item.name)}</b>` : ''}
+        ${item.subtitle ? `<p>${escapeHtml(item.subtitle)}</p>` : ''}
+      </div>
+    </article>`).join('');
+}
+
+function setGalleryCategory(category){
+  currentGalleryCategory=category;
+  renderGallery();
+}
+
+renderGallery();
 
 // ==========================================================
 // TANYA JAWAB

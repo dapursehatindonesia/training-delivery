@@ -172,3 +172,26 @@ const refreshment={
     ]
   }
 };
+
+
+// ==========================================================
+// GALLERY
+// Tambahkan item baru sesuai kategori.
+// image dapat diarahkan ke file gambar di repository.
+// ==========================================================
+const galleryItems=[
+  {id:'appearance',category:'Courier Standard',title:'Standar Pakaian',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar pakaian dan penampilan kurir',image:'logo_hg_hijau_cut.png'},
+  {id:'identity',category:'Courier Standard',title:'Identitas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar identitas kurir',image:'logo_hg_hijau_cut.png'},
+  {id:'equipment',category:'Courier Standard',title:'Equipment',period:'Courier Standard',name:'Healthy Go',subtitle:'Perlengkapan wajib sebelum delivery',image:'logo_hg_hijau_cut.png'},
+  {id:'vehicle',category:'Courier Standard',title:'Vehicle Ready',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar kesiapan kendaraan',image:'logo_hg_hijau_cut.png'},
+  {id:'delivery-equipment',category:'Courier Standard',title:'Delivery Equipment',period:'Courier Standard',name:'Healthy Go',subtitle:'Perlengkapan pendukung delivery',image:'logo_hg_hijau_cut.png'},
+  {id:'ready-check',category:'Courier Standard',title:'READY Check',period:'Courier Standard',name:'Healthy Go',subtitle:'Checklist kesiapan sebelum berangkat',image:'logo_hg_hijau_cut.png'},
+  {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
+  {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
+  {id:'best-delivery-moment-01',category:'Best Delivery Moment',title:'Best Delivery Moment',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Momen terbaik di lapangan',image:'logo_hg_hijau_cut.png'},
+  {id:'best-practice-01',category:'Best Practice',title:'Best Practice',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Contoh penerapan standar yang baik',image:'logo_hg_hijau_cut.png'},
+  {id:'recognition-01',category:'Recognition',title:'Recognition',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Apresiasi dan achievement',image:'logo_hg_hijau_cut.png'},
+  {id:'team-moment-01',category:'Team Moments',title:'Team Moments',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Training, briefing, dan kegiatan tim',image:'logo_hg_hijau_cut.png'},
+];
+
+
