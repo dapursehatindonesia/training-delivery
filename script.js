@@ -28,6 +28,15 @@ function showSection(id){
   const main=document.querySelector('main');
   if(main) main.scrollTo({top:0,behavior:'smooth'});
 
+  if(id==='cases'){
+    currentCaseRole='weekly';
+    renderCases();
+  }
+  if(id==='gallery'){
+    const categories=[...new Set((galleryItems || []).map(item=>item.category))];
+    if(categories.length) currentGalleryCategory=categories[0];
+    renderGallery();
+  }
   if(id==='qna') loadQna();
 }
 
@@ -95,25 +104,71 @@ if(moduleCards){
 // ==========================================================
 // CASE STUDY
 // ==========================================================
-let currentCaseRole=Object.keys(roles)[0];
+let currentCaseRole='weekly';
+
+function renderWeeklyCase(){
+  const wrap=document.getElementById('weeklyCaseWrap');
+  if(!wrap) return;
+
+  const list=(Array.isArray(weeklyCases)?weeklyCases:[]).filter(c=>c && c.active!==false && c.title);
+  if(!list.length){
+    wrap.innerHTML='<div class="empty-state">Belum ada Weekly Cases. Tambahkan di data.js.</div>';
+    return;
+  }
+
+  wrap.innerHTML=list.map((item,index)=>`
+    <article class="case-card">
+      <div class="case-top">
+        <span class="case-tag">WEEKLY CASES ${String(index+1).padStart(2,'0')}</span>
+        <div class="case-meta-group">
+          ${item.week ? `<span class="case-week">${escapeHtml(item.week)}</span>` : ''}
+          ${item.role ? `<span class="case-role" style="${roleStyle(item.role)}">${escapeHtml(roleName(item.role))}</span>` : ''}
+        </div>
+      </div>
+      <h3>${escapeHtml(item.title)}</h3>
+      <p class="case-situation">${escapeHtml(item.situation || '')}</p>
+      <p class="case-explain"><b>Penjelasan singkat:</b> ${escapeHtml(item.explanation || '')}</p>
+      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat Penyelesaian ▾</button>
+      <div class="solution"><b>PENYELESAIAN</b><br>${escapeHtml(item.solution || '')}</div>
+    </article>`).join('');
+}
 
 function renderCaseTabs(){
-  const tabData=Object.keys(roles).filter(k=>Array.isArray(cases[k]));
-  if(!tabData.length){
+  const roleTabs=Object.keys(roles).filter(k=>k!=='all' && Array.isArray(cases[k]));
+  const tabs=[{key:'weekly',label:'WEEKLY CASES'},...roleTabs.map(k=>({key:k,label:roleName(k)}))];
+
+  if(!tabs.length){
     document.getElementById('caseTabs').innerHTML='';
     document.getElementById('caseList').innerHTML='<div class="empty-state">Belum ada studi kasus.</div>';
     return;
   }
-  if(!tabData.includes(currentCaseRole)) currentCaseRole=tabData[0];
-  document.getElementById('caseTabs').innerHTML=tabData.map(k=>
-    `<button class="tab ${k===currentCaseRole?'active':''}" onclick="setCaseRole('${k}')">${escapeHtml(roleName(k))}</button>`
+
+  if(!tabs.some(t=>t.key===currentCaseRole)) currentCaseRole='weekly';
+  document.getElementById('caseTabs').innerHTML=tabs.map(t=>
+    `<button class="tab ${t.key===currentCaseRole?'active':''}" onclick="setCaseRole('${t.key}')">${escapeHtml(t.label)}</button>`
   ).join('');
 }
 
 function renderCases(){
   renderCaseTabs();
+  const weeklyWrap=document.getElementById('weeklyCaseWrap');
+  const listEl=document.getElementById('caseList');
+  const labelEl=document.getElementById('caseContentLabel');
+
+  if(currentCaseRole==='weekly'){
+    if(labelEl) labelEl.textContent='WEEKLY CASES';
+    if(weeklyWrap) weeklyWrap.style.display='grid';
+    if(listEl) listEl.style.display='none';
+    renderWeeklyCase();
+    return;
+  }
+
+  if(labelEl) labelEl.textContent='CASE LIBRARY';
+  if(weeklyWrap) weeklyWrap.style.display='none';
+  if(listEl) listEl.style.display='grid';
+
   const list=cases[currentCaseRole] || [];
-  document.getElementById('caseList').innerHTML=list.length ? list.map((c,i)=>`
+  listEl.innerHTML=list.length ? list.map((c,i)=>`
     <article class="case-card">
       <div class="case-top">
         <span class="case-tag">${escapeHtml(c[0] || `CASE ${String(i+1).padStart(2,'0')}`)}</span>
@@ -138,6 +193,7 @@ function toggleSolution(btn){
   btn.textContent=open?'Tutup Penyelesaian ▴':'Lihat Penyelesaian ▾';
 }
 
+renderWeeklyCase();
 renderCases();
 
 // ==========================================================
@@ -412,7 +468,7 @@ initRefreshment();
 // ==========================================================
 const galleryTabs=document.getElementById('galleryTabs');
 const galleryGrid=document.getElementById('galleryGrid');
-let currentGalleryCategory='Top Kurir of the Month';
+let currentGalleryCategory=(galleryItems && galleryItems.length) ? galleryItems[0].category : '';
 
 function renderGallery(){
   if(!galleryTabs || !galleryGrid) return;

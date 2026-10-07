@@ -52,6 +52,44 @@ const modules=[
 // }
 // ==========================================================
 
+// ==========================================================
+// CASE MINGGUAN
+// Update bagian ini setiap minggu. Tidak perlu mengubah script.js.
+// role: korlap | kurir | packing
+// ==========================================================
+const weeklyCases=[
+  {
+    id:'weekly-korlap-01',
+    active:true,
+    week:'6–12 Oktober 2026',
+    role:'korlap',
+    title:'Kurir Terlambat Berangkat',
+    situation:'Kurir seharusnya berangkat pukul 11.00, tetapi pukul 11.20 belum berangkat.',
+    explanation:'Korlap perlu memastikan fakta dan penyebab sebelum mengambil tindakan.',
+    solution:'CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP. Pastikan delivery kembali berjalan dan hasilnya dipantau.'
+  },
+  {
+    id:'weekly-kurir-01',
+    active:true,
+    week:'6–12 Oktober 2026',
+    role:'kurir',
+    title:'Customer Tidak Menjawab Saat Tiba',
+    situation:'Kurir sudah tiba di lokasi customer, tetapi customer belum merespons telepon atau chat.',
+    explanation:'Kurir perlu mengikuti prosedur komunikasi dan tidak meninggalkan pesanan tanpa arahan yang jelas.',
+    solution:'CHECK → CONTACT → WAIT ACCORDING TO SOP → REPORT → FOLLOW UP. Pastikan status delivery tercatat dengan benar.'
+  },
+  {
+    id:'weekly-packing-01',
+    active:true,
+    week:'6–12 Oktober 2026',
+    role:'packing',
+    title:'Label Pesanan Tidak Sesuai',
+    situation:'Saat proses packing, label pada box tidak sesuai dengan informasi pesanan yang diterima.',
+    explanation:'Tim Packing wajib menghentikan proses pada box tersebut dan melakukan pengecekan sebelum handover.',
+    solution:'STOP → CHECK → VERIFY → CORRECT → SCAN. Jangan menyerahkan box sebelum data dan label sesuai.'
+  }
+];
+
 const cases={
 korlap:[
  ['CASE 01','Kurir terlambat berangkat','Kurir seharusnya berangkat pukul 11.00, tetapi pukul 11.20 belum berangkat.','Korlap perlu memastikan fakta dan penyebab sebelum mengambil tindakan.','CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP. Pastikan delivery kembali berjalan dan hasilnya dipantau.'],
@@ -180,18 +218,12 @@ const refreshment={
 // image dapat diarahkan ke file gambar di repository.
 // ==========================================================
 const galleryItems=[
-  {id:'appearance',category:'Courier Standard',title:'Standar Pakaian',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar pakaian dan penampilan kurir',image:'logo_hg_hijau_cut.png'},
-  {id:'identity',category:'Courier Standard',title:'Identitas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar identitas kurir',image:'logo_hg_hijau_cut.png'},
-  {id:'equipment',category:'Courier Standard',title:'Equipment',period:'Courier Standard',name:'Healthy Go',subtitle:'Perlengkapan wajib sebelum delivery',image:'logo_hg_hijau_cut.png'},
-  {id:'vehicle',category:'Courier Standard',title:'Vehicle Ready',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar kesiapan kendaraan',image:'logo_hg_hijau_cut.png'},
-  {id:'delivery-equipment',category:'Courier Standard',title:'Delivery Equipment',period:'Courier Standard',name:'Healthy Go',subtitle:'Perlengkapan pendukung delivery',image:'logo_hg_hijau_cut.png'},
-  {id:'ready-check',category:'Courier Standard',title:'READY Check',period:'Courier Standard',name:'Healthy Go',subtitle:'Checklist kesiapan sebelum berangkat',image:'logo_hg_hijau_cut.png'},
+  {id:'appearance',category:'Courier Standard',title:'Atribut Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'Standar pakaian dan penampilan kurir',image:'std-pakaian.png'},
+  {id:'bag',category:'Courier Standard',title:'Tas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'Tas kurir dalam kondisi bersih & box tertata rapi',image:'std-tas.png'},
+  {id:'identity',category:'Courier Standard',title:'Identitas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'KTP & SIM dibawa saat bekerja',image:'identitas-kurir.png'},
   {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
   {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
-  {id:'best-delivery-moment-01',category:'Best Delivery Moment',title:'Best Delivery Moment',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Momen terbaik di lapangan',image:'logo_hg_hijau_cut.png'},
-  {id:'best-practice-01',category:'Best Practice',title:'Best Practice',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Contoh penerapan standar yang baik',image:'logo_hg_hijau_cut.png'},
-  {id:'recognition-01',category:'Recognition',title:'Recognition',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Apresiasi dan achievement',image:'logo_hg_hijau_cut.png'},
-  {id:'team-moment-01',category:'Team Moments',title:'Team Moments',period:'Oktober 2026',name:'Nama / Tim',subtitle:'Training, briefing, dan kegiatan tim',image:'logo_hg_hijau_cut.png'},
+  {id:'best-delivery-moment-01',category:'Best Delivery Moment',title:'Training Kurir',period:'September 2026',name:'Jabodetabek',subtitle:'Training kurir untuk meningkatkan kompetensi & standar pelayanan kurir',image:'training-kurir.png'},
 ];
 
 
