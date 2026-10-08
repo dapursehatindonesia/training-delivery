@@ -543,14 +543,41 @@ function setChatAiStatus(text='',type=''){
   chatAiStatus.className=`form-note ${type}`;
 }
 
+const CHAT_AI_KEYWORDS=[
+  'catering','katering','food','makanan','meal','packing','pack','box','order','pesanan',
+  'delivery','deliver','shipment','shipping','pengiriman','kurir','driver','customer',
+  'pelanggan','complaint','komplain','sop','operasional','quality','qc','quality check',
+  'label','alamat','pickup','handover','dispatch','retur','refund','telat','terlambat',
+  'rusak','salah kirim','training','healthy go'
+];
+
+function isAllowedChatTopic(message){
+  const text=String(message || '').toLowerCase();
+  return CHAT_AI_KEYWORDS.some(keyword=>text.includes(keyword));
+}
+
 async function sendChatAi(message){
-  if(!supabaseClient) throw new Error('Supabase belum terhubung.');
+  if(!supabaseClient) throw new Error('Supabase belum terhubung di browser.');
 
   const {data,error}=await supabaseClient.functions.invoke('training-ai',{
     body:{message}
   });
 
-  if(error) throw error;
+  if(error){
+    // Supabase FunctionsHttpError biasanya menyimpan response backend di error.context.
+    try{
+      const response=error.context;
+      if(response && typeof response.json==='function'){
+        const payload=await response.clone().json();
+        const detail=payload?.details?.error?.message || payload?.details?.message || payload?.error;
+        if(detail) throw new Error(detail);
+      }
+    }catch(detailError){
+      if(detailError instanceof Error && detailError.message) throw detailError;
+    }
+    throw new Error(error.message || 'Edge Function training-ai gagal dipanggil.');
+  }
+
   if(!data?.answer) throw new Error(data?.error || 'AI tidak memberikan jawaban.');
   return data.answer;
 }
@@ -569,6 +596,15 @@ if(chatAiForm) chatAiForm.addEventListener('submit',async event=>{
 
   addChatAiMessage(message,'user');
   chatAiInput.value='';
+
+  // Pertanyaan di luar scope ditolak langsung dari browser agar tidak memanggil Gemini.
+  if(!isAllowedChatTopic(message)){
+    addChatAiMessage('Maaf, Chat AI hanya dapat membantu pertanyaan seputar bisnis catering dan shipment/delivery.','ai');
+    setChatAiStatus('Pertanyaan di luar scope training.');
+    chatAiInput.focus();
+    return;
+  }
+
   chatAiSend.disabled=true;
   chatAiSend.textContent='...';
   setChatAiStatus('Sedang mencari jawaban...');
@@ -580,7 +616,7 @@ if(chatAiForm) chatAiForm.addEventListener('submit',async event=>{
   }catch(error){
     console.error('Chat AI error:',error);
     addChatAiMessage('Maaf, Chat AI sedang tidak dapat digunakan. Silakan coba lagi.','ai error');
-    setChatAiStatus('Koneksi Chat AI gagal. Cek Edge Function training-ai di Supabase.','error');
+    setChatAiStatus(`Koneksi Chat AI gagal: ${error?.message || 'cek Edge Function training-ai di Supabase.'}`,'error');
   }finally{
     chatAiSend.disabled=false;
     chatAiSend.textContent='Kirim';
