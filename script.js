@@ -528,11 +528,27 @@ function closeChatAi(){
   chatAiModal.setAttribute('aria-hidden','true');
 }
 
+function renderChatAiMarkdown(text){
+  const safe=escapeHtml(String(text ?? ''));
+
+  // Support Gemini Markdown emphasis without displaying * characters.
+  // **teks** and *teks* -> bold; everything else remains normal.
+  return safe
+    .replace(/\*\*(.+?)\*\*/gs,'<strong>$1</strong>')
+    .replace(/(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)/gs,'<strong>$1</strong>');
+}
+
 function addChatAiMessage(text,type='ai'){
   if(!chatAiMessages) return;
   const item=document.createElement('div');
   item.className=`chat-ai-message ${type}`;
-  item.textContent=text;
+
+  if(type==='ai' || type==='error'){
+    item.innerHTML=renderChatAiMarkdown(text);
+  }else{
+    item.textContent=String(text ?? '');
+  }
+
   chatAiMessages.appendChild(item);
   chatAiMessages.scrollTop=chatAiMessages.scrollHeight;
 }
