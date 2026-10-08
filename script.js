@@ -503,6 +503,92 @@ function setGalleryCategory(category){
 renderGallery();
 
 // ==========================================================
+// CHAT AI ASSISTANT
+// Popup menggunakan Supabase Edge Function: training-ai
+// API key Gemini tetap berada di Supabase, bukan di frontend.
+// ==========================================================
+const chatAiFab=document.getElementById('chatAiFab');
+const chatAiModal=document.getElementById('chatAiModal');
+const chatAiForm=document.getElementById('chatAiForm');
+const chatAiInput=document.getElementById('chatAiInput');
+const chatAiSend=document.getElementById('chatAiSend');
+const chatAiMessages=document.getElementById('chatAiMessages');
+const chatAiStatus=document.getElementById('chatAiStatus');
+
+function openChatAi(){
+  if(!chatAiModal) return;
+  chatAiModal.classList.add('open');
+  chatAiModal.setAttribute('aria-hidden','false');
+  setTimeout(()=>chatAiInput?.focus(),80);
+}
+
+function closeChatAi(){
+  if(!chatAiModal) return;
+  chatAiModal.classList.remove('open');
+  chatAiModal.setAttribute('aria-hidden','true');
+}
+
+function addChatAiMessage(text,type='ai'){
+  if(!chatAiMessages) return;
+  const item=document.createElement('div');
+  item.className=`chat-ai-message ${type}`;
+  item.textContent=text;
+  chatAiMessages.appendChild(item);
+  chatAiMessages.scrollTop=chatAiMessages.scrollHeight;
+}
+
+function setChatAiStatus(text='',type=''){
+  if(!chatAiStatus) return;
+  chatAiStatus.textContent=text;
+  chatAiStatus.className=`form-note ${type}`;
+}
+
+async function sendChatAi(message){
+  if(!supabaseClient) throw new Error('Supabase belum terhubung.');
+
+  const {data,error}=await supabaseClient.functions.invoke('training-ai',{
+    body:{message}
+  });
+
+  if(error) throw error;
+  if(!data?.answer) throw new Error(data?.error || 'AI tidak memberikan jawaban.');
+  return data.answer;
+}
+
+if(chatAiFab) chatAiFab.addEventListener('click',openChatAi);
+document.querySelectorAll('[data-chat-ai-close]').forEach(el=>el.addEventListener('click',closeChatAi));
+
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape' && chatAiModal?.classList.contains('open')) closeChatAi();
+});
+
+if(chatAiForm) chatAiForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const message=(chatAiInput?.value || '').trim();
+  if(!message) return;
+
+  addChatAiMessage(message,'user');
+  chatAiInput.value='';
+  chatAiSend.disabled=true;
+  chatAiSend.textContent='...';
+  setChatAiStatus('Sedang mencari jawaban...');
+
+  try{
+    const answer=await sendChatAi(message);
+    addChatAiMessage(answer,'ai');
+    setChatAiStatus('');
+  }catch(error){
+    console.error('Chat AI error:',error);
+    addChatAiMessage('Maaf, Chat AI sedang tidak dapat digunakan. Silakan coba lagi.','ai error');
+    setChatAiStatus('Koneksi Chat AI gagal. Cek Edge Function training-ai di Supabase.','error');
+  }finally{
+    chatAiSend.disabled=false;
+    chatAiSend.textContent='Kirim';
+    chatAiInput.focus();
+  }
+});
+
+// ==========================================================
 // TANYA JAWAB
 // Peserta: SELECT + INSERT questions
 // Website: SELECT answers

@@ -203,10 +203,32 @@
   </section>
 
 <footer>Healthy Go Delivery Learning Management System <span>© 2026</span></footer>
-<button class="trainer-fab" type="button" data-target="qna" aria-label="Ask Trainee">Ask Trainer?</button>
+<button class="trainer-fab" id="chatAiFab" type="button" aria-label="Chat AI">Chat AI</button>
+
+<div id="chatAiModal" class="chat-ai-modal" aria-hidden="true">
+  <div class="chat-ai-backdrop" data-chat-ai-close></div>
+  <div class="chat-ai-panel" role="dialog" aria-modal="true" aria-labelledby="chatAiTitle">
+    <div class="chat-ai-head">
+      <div>
+        <span class="eyebrow">HEALTHY GO • TRAINING ASSISTANT</span>
+        <h3 id="chatAiTitle">Chat AI</h3>
+        <p>Tanyakan hal seputar catering, packing, shipment, delivery, dan operasional training.</p>
+      </div>
+      <button class="chat-ai-close" type="button" data-chat-ai-close aria-label="Tutup">×</button>
+    </div>
+    <div id="chatAiMessages" class="chat-ai-messages">
+      <div class="chat-ai-message ai">Halo! Saya Chat AI Healthy Go. Silakan tanyakan hal terkait operasional catering dan shipment/delivery.</div>
+    </div>
+    <form id="chatAiForm" class="chat-ai-form">
+      <textarea id="chatAiInput" maxlength="1200" rows="2" placeholder="Tulis pertanyaan kamu..."></textarea>
+      <button id="chatAiSend" class="primary" type="submit">Kirim</button>
+    </form>
+    <p id="chatAiStatus" class="form-note"></p>
+  </div>
+</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="data.js?v=20261003c"></script>
-<script src="script.js?v=20261003c"></script>
+<script src="data.js?v=20261008a"></script>
+<script src="script.js?v=20261008a"></script>
 </body>
 </html>
