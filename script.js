@@ -503,9 +503,9 @@ function setGalleryCategory(category){
 renderGallery();
 
 // ==========================================================
-// CHAT AI ASSISTANT
-// Popup menggunakan Supabase Edge Function: training-ai
-// API key Gemini tetap berada di Supabase, bukan di frontend.
+// CHAT AI ASSISTANT — ROLE-AWARE
+// Role diambil dari data.js, tetapi role ALL tidak ditawarkan.
+// Hanya pilihan role yang disimpan di perangkat; riwayat chat tidak disimpan.
 // ==========================================================
 const chatAiFab=document.getElementById('chatAiFab');
 const chatAiModal=document.getElementById('chatAiModal');
@@ -514,132 +514,117 @@ const chatAiInput=document.getElementById('chatAiInput');
 const chatAiSend=document.getElementById('chatAiSend');
 const chatAiMessages=document.getElementById('chatAiMessages');
 const chatAiStatus=document.getElementById('chatAiStatus');
+const CHAT_AI_ROLE_STORAGE_KEY='healthyGoTrainingChatAiRole';
+const CHAT_AI_ALLOWED_ROLES=['korlap','kurir','packing'];
+const chatAiRoles=CHAT_AI_ALLOWED_ROLES.filter(key=>roles && roles[key]).map(key=>({key,...roles[key]}));
+let activeChatAiRole=loadChatAiRole();
 
+function loadChatAiRole(){
+  try{const saved=localStorage.getItem(CHAT_AI_ROLE_STORAGE_KEY);return CHAT_AI_ALLOWED_ROLES.includes(saved)&&roles?.[saved]?saved:null;}catch(_){return null;}
+}
+function saveChatAiRole(role){
+  if(!CHAT_AI_ALLOWED_ROLES.includes(role)||!roles?.[role])return false;
+  activeChatAiRole=role;
+  try{localStorage.setItem(CHAT_AI_ROLE_STORAGE_KEY,role);return true;}catch(_){return false;}
+}
+function renderChatAiMarkdown(text){
+  const safe=escapeHtml(String(text??''));
+  return safe.replace(/\*\*(.+?)\*\*/gs,'<strong>$1</strong>').replace(/(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)/gs,'<strong>$1</strong>');
+}
+function scrollChatAiToBottom(){if(chatAiMessages)chatAiMessages.scrollTop=chatAiMessages.scrollHeight;}
+function addChatAiMessage(text,type='ai'){
+  if(!chatAiMessages)return null;
+  const item=document.createElement('div');item.className=`chat-ai-message ${type}`;
+  if(type==='ai'||type==='error')item.innerHTML=renderChatAiMarkdown(text);else item.textContent=String(text??'');
+  chatAiMessages.appendChild(item);scrollChatAiToBottom();return item;
+}
+function addChatAiRoleChoices(prompt='Pilih role yang sesuai dengan tugasmu.'){
+  if(!chatAiMessages)return;
+  const item=document.createElement('div');item.className='chat-ai-message ai chat-ai-role-choice-message';
+  const intro=document.createElement('div');intro.textContent=prompt;item.appendChild(intro);
+  const list=document.createElement('div');list.className='chat-ai-role-choices';
+  chatAiRoles.forEach(role=>{
+    const button=document.createElement('button');button.type='button';button.className=`chat-ai-role-choice role-${role.key}`;button.dataset.chatAiRole=role.key;
+    const name=document.createElement('strong');name.textContent=role.name;
+    const desc=document.createElement('span');desc.textContent=role.desc||'';
+    button.append(name,desc);list.appendChild(button);
+  });
+  item.appendChild(list);chatAiMessages.appendChild(item);scrollChatAiToBottom();
+}
 function openChatAi(){
-  if(!chatAiModal) return;
-  chatAiModal.classList.add('open');
-  chatAiModal.setAttribute('aria-hidden','false');
+  if(!chatAiModal)return;
+  chatAiModal.classList.add('open');chatAiModal.setAttribute('aria-hidden','false');
+  // Tidak memulihkan riwayat percakapan; hanya role yang diingat.
+  if(chatAiMessages&&!chatAiMessages.dataset.initialized){
+    chatAiMessages.innerHTML='';
+    if(activeChatAiRole&&roles[activeChatAiRole]){
+      addChatAiMessage(`Role aktif: **${roles[activeChatAiRole].name}**. Pilihan ini tersimpan di perangkatmu. Ada yang bisa aku bantu hari ini? Jika ingin ganti role, cukup ketik **ganti role** atau sebutkan role yang baru.`);
+    }else{
+      addChatAiMessage('Halo! 👋 Sebelum mulai, kamu bertugas sebagai apa hari ini? Pilih role supaya aku bisa menyesuaikan jawaban dengan tanggung jawabmu.');
+      addChatAiRoleChoices('Pilih role kamu:');
+    }
+    chatAiMessages.dataset.initialized='true';
+  }
   setTimeout(()=>chatAiInput?.focus(),80);
 }
-
-function closeChatAi(){
-  if(!chatAiModal) return;
-  chatAiModal.classList.remove('open');
-  chatAiModal.setAttribute('aria-hidden','true');
+function closeChatAi(){if(!chatAiModal)return;chatAiModal.classList.remove('open');chatAiModal.setAttribute('aria-hidden','true');}
+function setChatAiStatus(text='',type=''){if(!chatAiStatus)return;chatAiStatus.textContent=text;chatAiStatus.className=`form-note ${type}`;}
+function normalizeChatAiText(text){return String(text||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();}
+function detectChatAiRoleRequest(message){
+  const text=normalizeChatAiText(message);
+  const changeVerb=/\b(ganti|ubah|rubah|pindah|switch|change)\b/.test(text);
+  const changeIntent=changeVerb&&(/\b(role|peran|posisi|tugas)\b/.test(text)||/\b(ke|jadi)\s+(korlap|kurir|packing|tim packing)\b/.test(text));
+  const explicitRole=/\b(saya|aku|gw|gue|gua|sekarang|jadi|bertugas|sebagai)\b/.test(text)&&/\b(korlap|kurir|packing|tim packing)\b/.test(text);
+  const directRole=/^(korlap|kurir|packing|tim packing)$/.test(text);
+  if(!(changeIntent||explicitRole||directRole))return null;
+  if(/\b(korlap)\b/.test(text))return {intent:'change',role:'korlap'};
+  if(/\b(kurir)\b/.test(text))return {intent:'change',role:'kurir'};
+  if(/\b(tim packing|packing)\b/.test(text))return {intent:'change',role:'packing'};
+  return {intent:'choose',role:null};
 }
-
-function renderChatAiMarkdown(text){
-  const safe=escapeHtml(String(text ?? ''));
-
-  // Support Gemini Markdown emphasis without displaying * characters.
-  // **teks** and *teks* -> bold; everything else remains normal.
-  return safe
-    .replace(/\*\*(.+?)\*\*/gs,'<strong>$1</strong>')
-    .replace(/(?<!\*)\*(?!\s)(.+?)(?<!\s)\*(?!\*)/gs,'<strong>$1</strong>');
-}
-
-function addChatAiMessage(text,type='ai'){
-  if(!chatAiMessages) return;
-  const item=document.createElement('div');
-  item.className=`chat-ai-message ${type}`;
-
-  if(type==='ai' || type==='error'){
-    item.innerHTML=renderChatAiMarkdown(text);
-  }else{
-    item.textContent=String(text ?? '');
+function handleChatAiRoleRequest(request){
+  if(request?.intent==='change'&&request.role&&CHAT_AI_ALLOWED_ROLES.includes(request.role)){
+    const role=roles[request.role];addChatAiMessage(`Kamu ingin mengganti role menjadi **${role.name}**. Klik pilihan di bawah untuk mengonfirmasi.`);addChatAiRoleChoices('Konfirmasi role baru:');return;
   }
-
-  chatAiMessages.appendChild(item);
-  chatAiMessages.scrollTop=chatAiMessages.scrollHeight;
+  addChatAiMessage('Tentu, kita bisa ganti role. Pilih role yang sesuai dengan tugasmu sekarang:');addChatAiRoleChoices('Pilih role baru:');
 }
-
-function setChatAiStatus(text='',type=''){
-  if(!chatAiStatus) return;
-  chatAiStatus.textContent=text;
-  chatAiStatus.className=`form-note ${type}`;
+function confirmChatAiRole(roleKey){
+  const role=chatAiRoles.find(item=>item.key===roleKey);if(!role)return;
+  saveChatAiRole(roleKey);
+  addChatAiMessage(role.name,'user');
+  addChatAiMessage(`✅ **Role berhasil disimpan: ${role.name}.** Aku akan menyesuaikan jawabanku dengan tugas ${role.name}. Ada yang bisa aku bantu hari ini? Jika ingin ganti role, cukup ketik **ganti role** atau sebutkan role yang baru.`);
+  setChatAiStatus('Role aktif: '+role.name);
 }
-
 const CHAT_AI_KEYWORDS=[
-  'catering','katering','food','makanan','meal','packing','pack','box','order','pesanan',
-  'delivery','deliver','shipment','shipping','pengiriman','kurir','driver','customer',
-  'pelanggan','complaint','komplain','sop','operasional','quality','qc','quality check',
-  'label','alamat','pickup','handover','dispatch','retur','refund','telat','terlambat',
-  'rusak','salah kirim','training','healthy go'
+  'catering','katering','food','makanan','meal','packing','pack','box','order','pesanan','delivery','deliver','shipment','shipping','pengiriman','kurir','driver','customer','pelanggan','complaint','komplain','sop','operasional','quality','qc','quality check','label','alamat','pickup','handover','dispatch','retur','refund','telat','terlambat','rusak','salah','training','healthy go','motor','vehicle','kendaraan','berangkat','kirim','mengirim','antar','mengantar','serah terima','cek','periksa','kualitas','jumlah','kelengkapan','kendala','mogok','jalan','packing list','order sheet','scan','suhu','higien','hygiene'
 ];
-
-function isAllowedChatTopic(message){
-  const text=String(message || '').toLowerCase();
-  return CHAT_AI_KEYWORDS.some(keyword=>text.includes(keyword));
-}
-
+function isAllowedChatTopic(message){const text=normalizeChatAiText(message);return CHAT_AI_KEYWORDS.some(keyword=>text.includes(keyword));}
 async function sendChatAi(message){
-  if(!supabaseClient) throw new Error('Supabase belum terhubung di browser.');
-
-  const {data,error}=await supabaseClient.functions.invoke('training-ai',{
-    body:{message}
-  });
-
+  if(!supabaseClient)throw new Error('Supabase belum terhubung di browser.');
+  if(!activeChatAiRole)throw new Error('Pilih role terlebih dahulu.');
+  const {data,error}=await supabaseClient.functions.invoke('training-ai',{body:{message,role:activeChatAiRole}});
   if(error){
-    // Supabase FunctionsHttpError biasanya menyimpan response backend di error.context.
-    try{
-      const response=error.context;
-      if(response && typeof response.json==='function'){
-        const payload=await response.clone().json();
-        const detail=payload?.details?.error?.message || payload?.details?.message || payload?.error;
-        if(detail) throw new Error(detail);
-      }
-    }catch(detailError){
-      if(detailError instanceof Error && detailError.message) throw detailError;
-    }
-    throw new Error(error.message || 'Edge Function training-ai gagal dipanggil.');
+    try{const response=error.context;if(response&&typeof response.json==='function'){const payload=await response.clone().json();const detail=payload?.details?.error?.message||payload?.details?.message||payload?.error;if(detail)throw new Error(detail);}}catch(detailError){if(detailError instanceof Error&&detailError.message)throw detailError;}
+    throw new Error(error.message||'Edge Function training-ai gagal dipanggil.');
   }
-
-  if(!data?.answer) throw new Error(data?.error || 'AI tidak memberikan jawaban.');
-  return data.answer;
+  if(!data?.answer)throw new Error(data?.error||'AI tidak memberikan jawaban.');return data.answer;
 }
-
-if(chatAiFab) chatAiFab.addEventListener('click',openChatAi);
+if(chatAiFab)chatAiFab.addEventListener('click',openChatAi);
 document.querySelectorAll('[data-chat-ai-close]').forEach(el=>el.addEventListener('click',closeChatAi));
-
-document.addEventListener('keydown',event=>{
-  if(event.key==='Escape' && chatAiModal?.classList.contains('open')) closeChatAi();
+if(chatAiMessages)chatAiMessages.addEventListener('click',event=>{const button=event.target.closest('[data-chat-ai-role]');if(button)confirmChatAiRole(button.dataset.chatAiRole);});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&chatAiModal?.classList.contains('open'))closeChatAi();});
+if(chatAiForm)chatAiForm.addEventListener('submit',async event=>{
+  event.preventDefault();const message=(chatAiInput?.value||'').trim();if(!message)return;
+  addChatAiMessage(message,'user');chatAiInput.value='';
+  // Ganti role ditangani di frontend dan tidak menghabiskan token Gemini.
+  const roleRequest=detectChatAiRoleRequest(message);if(roleRequest){handleChatAiRoleRequest(roleRequest);chatAiInput.focus();return;}
+  if(!activeChatAiRole){addChatAiMessage('Pilih role terlebih dahulu agar aku bisa memberikan jawaban yang sesuai.');addChatAiRoleChoices('Pilih role kamu:');chatAiInput.focus();return;}
+  if(!isAllowedChatTopic(message)){addChatAiMessage('Maaf, aku hanya dapat membantu pertanyaan seputar operasional catering, packing, shipment/delivery, kurir, dan customer delivery.','ai');setChatAiStatus('Pertanyaan di luar scope training.');chatAiInput.focus();return;}
+  chatAiSend.disabled=true;chatAiSend.textContent='...';setChatAiStatus('Sedang mencari jawaban...');
+  try{const answer=await sendChatAi(message);addChatAiMessage(answer,'ai');setChatAiStatus('Role aktif: '+(roles[activeChatAiRole]?.name||activeChatAiRole));}
+  catch(error){console.error('Chat AI error:',error);addChatAiMessage('Maaf, Chat AI sedang tidak dapat digunakan. Silakan coba lagi.','ai error');setChatAiStatus(`Koneksi Chat AI gagal: ${error?.message||'cek Edge Function training-ai di Supabase.'}`,'error');}
+  finally{chatAiSend.disabled=false;chatAiSend.textContent='Kirim';chatAiInput.focus();}
 });
-
-if(chatAiForm) chatAiForm.addEventListener('submit',async event=>{
-  event.preventDefault();
-  const message=(chatAiInput?.value || '').trim();
-  if(!message) return;
-
-  addChatAiMessage(message,'user');
-  chatAiInput.value='';
-
-  // Pertanyaan di luar scope ditolak langsung dari browser agar tidak memanggil Gemini.
-  if(!isAllowedChatTopic(message)){
-    addChatAiMessage('Maaf, Chat AI hanya dapat membantu pertanyaan seputar bisnis catering dan shipment/delivery.','ai');
-    setChatAiStatus('Pertanyaan di luar scope training.');
-    chatAiInput.focus();
-    return;
-  }
-
-  chatAiSend.disabled=true;
-  chatAiSend.textContent='...';
-  setChatAiStatus('Sedang mencari jawaban...');
-
-  try{
-    const answer=await sendChatAi(message);
-    addChatAiMessage(answer,'ai');
-    setChatAiStatus('');
-  }catch(error){
-    console.error('Chat AI error:',error);
-    addChatAiMessage('Maaf, Chat AI sedang tidak dapat digunakan. Silakan coba lagi.','ai error');
-    setChatAiStatus(`Koneksi Chat AI gagal: ${error?.message || 'cek Edge Function training-ai di Supabase.'}`,'error');
-  }finally{
-    chatAiSend.disabled=false;
-    chatAiSend.textContent='Kirim';
-    chatAiInput.focus();
-  }
-});
-
 // ==========================================================
 // TANYA JAWAB
 // Peserta: SELECT + INSERT questions

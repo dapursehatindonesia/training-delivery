@@ -265,3 +265,15 @@ footer{position:relative;left:auto;right:auto;bottom:auto;background:#064f3e;col
 .gallery-card-body b{display:block;font-size:14px;color:#0b8062;line-height:1.4}
 .gallery-card-body p{margin:6px 0 0;color:#71827d;font-size:13px;line-height:1.55}
 @media(min-width:901px){.gallery-card-body{padding:20px 21px 22px}}
+
+
+/* Chat AI role choices: interactive buttons inside the existing chat bubble */
+.chat-ai-role-choice-message{max-width:96%!important}
+.chat-ai-role-choices{display:grid;gap:8px;margin-top:10px;width:100%}
+.chat-ai-role-choice{display:flex;flex-direction:column;gap:4px;width:100%;padding:11px 12px;text-align:left;background:#fff;border:1px solid #d8e6e0;border-radius:11px;color:#24483e;cursor:pointer;font:inherit;transition:border-color .15s,transform .15s}
+.chat-ai-role-choice:hover,.chat-ai-role-choice:focus-visible{border-color:#08775c;outline:none;transform:translateY(-1px)}
+.chat-ai-role-choice strong{font-size:13px;letter-spacing:.2px}
+.chat-ai-role-choice span{font-size:11px;line-height:1.4;color:#61766e}
+.chat-ai-role-choice.role-korlap{border-left:4px solid #c64039}
+.chat-ai-role-choice.role-kurir{border-left:4px solid #08775c}
+.chat-ai-role-choice.role-packing{border-left:4px solid #2b6fb6}
