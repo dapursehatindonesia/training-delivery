@@ -92,7 +92,7 @@ const weeklyCases=[
 
 const cases={
 korlap:[
- ['CASE 01','Kurir terlambat berangkat','Kurir seharusnya berangkat pukul 11.00, tetapi pukul 11.20 belum berangkat.','Korlap perlu memastikan fakta dan penyebab sebelum mengambil tindakan.','CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP. Pastikan delivery kembali berjalan dan hasilnya dipantau.'],
+ ['CASE 01','Kurir terlambat berangkat','Kurir seharusnya berangkat pukul 09.00, tetapi pukul 09.20 belum berangkat.','Korlap perlu memastikan fakta dan penyebab sebelum mengambil tindakan.','CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP. Pastikan delivery kembali berjalan dan hasilnya dipantau.'],
  ['CASE 02','Kendaraan bermasalah','Kurir membawa 40 box tetapi kendaraan mengalami masalah di perjalanan.','Kendaraan bermasalah dapat mengganggu keselamatan, produk, customer, dan operasional.','STOP → SECURE → REPORT → SOLVE → FOLLOW UP. Amankan box, laporkan, koordinasikan backup, lalu pastikan delivery selesai.'],
  ['CASE 03','Customer complaint','Customer mengeluhkan makanan terlambat.','Complaint perlu ditangani dengan melihat fakta delivery dan penyebab keterlambatan.','Identifikasi penyebab → ambil tindakan → update pihak terkait → pastikan penyelesaian → evaluasi agar tidak berulang.'],
  ['CASE 04','Kurir hadir tetapi belum READY','Kurir sudah hadir, tetapi HP belum siap dan kendaraan belum dicek.','Hadir belum tentu berarti siap delivery.','Lakukan readiness check: PERSON + VEHICLE + EQUIPMENT + APPEARANCE. Jika belum siap, selesaikan gap sebelum deployment.'],
