@@ -59,34 +59,34 @@ const modules=[
 // ==========================================================
 const weeklyCases=[
   {
-    id:'weekly-korlap-01',
-    active:true,
-    week:'6–12 Oktober 2026',
-    role:'korlap',
-    title:'Kurir Terlambat Berangkat',
-    situation:'Kurir seharusnya berangkat pukul 11.00, tetapi pukul 11.20 belum berangkat.',
-    explanation:'Korlap perlu memastikan fakta dan penyebab sebelum mengambil tindakan.',
-    solution:'CEK → TANYA → PUTUSKAN → TINDAK → FOLLOW UP. Pastikan delivery kembali berjalan dan hasilnya dipantau.'
-  },
-  {
     id:'weekly-kurir-01',
     active:true,
-    week:'6–12 Oktober 2026',
+    week:'5–11 Oktober 2026',
     role:'kurir',
-    title:'Customer Tidak Menjawab Saat Tiba',
-    situation:'Kurir sudah tiba di lokasi customer, tetapi customer belum merespons telepon atau chat.',
-    explanation:'Kurir perlu mengikuti prosedur komunikasi dan tidak meninggalkan pesanan tanpa arahan yang jelas.',
-    solution:'CHECK → CONTACT → WAIT ACCORDING TO SOP → REPORT → FOLLOW UP. Pastikan status delivery tercatat dengan benar.'
+    title:'Box Disemutin',
+    situation:'Banyak komplain terkait box disemutin.',
+    explanation:'Kebersihan dan kehigenisan box merupakan hal yang harus dijaga.',
+    solution:'Kurir perlu cek kondisi tas sebelum berangkat. Kurir perlu cek kondisi peletakan box di tempat customer, pastikan aman dari semut atau serangga lainnya. Berikan dobel plastik jika box berpotensi bersemut.'
   },
   {
-    id:'weekly-packing-01',
+    id:'weekly-kurir-02',
     active:true,
-    week:'6–12 Oktober 2026',
-    role:'packing',
-    title:'Label Pesanan Tidak Sesuai',
-    situation:'Saat proses packing, label pada box tidak sesuai dengan informasi pesanan yang diterima.',
-    explanation:'Tim Packing wajib menghentikan proses pada box tersebut dan melakukan pengecekan sebelum handover.',
-    solution:'STOP → CHECK → VERIFY → CORRECT → SCAN. Jangan menyerahkan box sebelum data dan label sesuai.'
+    week:'6 Oktober 2026',
+    role:'kurir',
+    title:'Salah Alamat',
+    situation:'Kurir mengirim box ke alamat yang belum sesuai, sempat dikirim ulang ke alamat sesuai tapi melebihi jam pengantaran.',
+    explanation:'Kurir WAJIB teliti dalam membaca label alamat di box.',
+    solution:'Ketika terjadi salah alamat, kurir wajib menginfokan ke customer, sampaikan permintaan maaf ke customer. Jangan lupa, info ke korlap. Langsung antar box ke alamat yang sesuai.'
+  },
+  {
+    id:'weekly-kurir-03',
+    active:true,
+    week:'9 Oktober 2026',
+    role:'kurir',
+    title:'Free Item Tidak Terkirim',
+    situation:'Ada customer yang tidak menerima free item padahal seharusnya dikirimkan free item.',
+    explanation:'Free item wajib diterima customer yang sesuai karena ini bentuk kompensasi dari healthy go.',
+    solution:'Korlap, tim packing, dan kurir harus cek manifest terkait customer mana saja yang mendapat free item. Jika tidak ada bisa koordinasi dengan CS sesegera mungkin.'
   }
 ];
 
