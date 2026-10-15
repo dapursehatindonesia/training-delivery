@@ -23,7 +23,7 @@ const modules=[
     role:'kurir',
     title:'Modul Kurir: Zero Complaint, The Power of Excellent Service',
     description:'Materi training untuk KURIR.',
-    url:'https://drive.google.com/file/d/1A_LDtgyqKQiudxCNm5FrWwCPIiet4evF/view?usp=sharing'
+    url:'https://drive.google.com/file/d/1FmrybY45bfXPrs6kVRIhMbFe1RpDwLSx/view?usp=sharing'
   },
   {
     id:'packing-01',
