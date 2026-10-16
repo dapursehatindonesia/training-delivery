@@ -37,7 +37,7 @@ const modules=[
     role:'all',
     title:'Standard Photo Report',
     description:'Standar Foto Serah Terima ke Customer.',
-    url:'https://drive.google.com/file/d/1-LFySdpUlGAuBqIDQsQN0ZuZqdOv3ala/view?usp=sharing'
+    url:'https://drive.google.com/file/d/11lHOy3fEIaYvclzhskRABzaqKUkEbj0L/view?usp=sharing'
   }
 ];
 
