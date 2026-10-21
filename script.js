@@ -96,7 +96,7 @@ if(moduleCards){
       <span class="role-badge" style="${roleStyle(m.role)}">${escapeHtml(r.name)}</span>
       <h3>${escapeHtml(m.title)}</h3>
       <p class="module-desc">${escapeHtml(m.description || '')}</p>
-      <a class="drive" href="${escapeHtml(m.url)}" target="_blank" rel="noopener">Buka Modul ↗</a>
+      <a class="drive" href="${escapeHtml(m.url)}" target="_blank" rel="noopener">Buka modul</a>
     </article>`;
   }).join('');
 }
@@ -128,7 +128,7 @@ function renderWeeklyCase(){
       <h3>${escapeHtml(item.title)}</h3>
       <p class="case-situation">${escapeHtml(item.situation || '')}</p>
       <p class="case-explain"><b>Penjelasan singkat:</b> ${escapeHtml(item.explanation || '')}</p>
-      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat Penyelesaian ▾</button>
+      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat penyelesaian</button>
       <div class="solution"><b>PENYELESAIAN</b><br>${escapeHtml(item.solution || '')}</div>
     </article>`).join('');
 }
@@ -177,7 +177,7 @@ function renderCases(){
       <h3>${escapeHtml(c[1])}</h3>
       <p class="case-situation">${escapeHtml(c[2])}</p>
       <p class="case-explain"><b>Penjelasan singkat:</b> ${escapeHtml(c[3])}</p>
-      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat Penyelesaian ▾</button>
+      <button class="solution-toggle" onclick="toggleSolution(this)">Lihat penyelesaian</button>
       <div class="solution"><b>PENYELESAIAN</b><br>${escapeHtml(c[4])}</div>
     </article>`).join('') : '<div class="empty-state">Belum ada studi kasus untuk role ini. Tambahkan di data.js.</div>';
 }
@@ -190,7 +190,7 @@ function setCaseRole(role){
 function toggleSolution(btn){
   const solution=btn.nextElementSibling;
   const open=solution.classList.toggle('show');
-  btn.textContent=open?'Tutup Penyelesaian ▴':'Lihat Penyelesaian ▾';
+  btn.textContent=open?'Tutup penyelesaian':'Lihat penyelesaian';
 }
 
 renderWeeklyCase();
@@ -720,7 +720,7 @@ function renderQnaList(){
       <p class="qna-question">“${escapeHtml(item.question)}”</p>
 
       <div class="qna-status ${answered?'answered':'open'}">
-        ${answered?'🟢 Sudah Dijawab':'🟡 Menunggu Jawaban'}
+        <i></i>${answered?'Sudah dijawab':'Menunggu jawaban'}
       </div>
 
       ${answered?`
