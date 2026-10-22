@@ -222,6 +222,7 @@ const galleryItems=[
   {id:'bag',category:'Courier Standard',title:'Tas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'Tas kurir dalam kondisi bersih & box tertata rapi',image:'std-tas.png'},
   {id:'identity',category:'Courier Standard',title:'Identitas Kurir',period:'Courier Standard',name:'Healthy Go',subtitle:'KTP & SIM dibawa saat bekerja',image:'identitas-kurir.png'},
   {id:'mentality',category:'Courier Standard',title:'Courier Mentality',period:'Courier Standard',name:'Healthy Go',subtitle:'Sikap positif, tanggung jawab, dan memberikan yang terbaik.',image:'Mentality-Kurir.png'},
+  {id:'integrity',category:'Courier Standard',title:'Integrity Awareness',period:'Courier Standard',name:'Healthy Go',subtitle:'Integritas Nomor Satu.',image:'Mentality-Kurir.png'},
   {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
   {id:'top-kurir-2026-10',category:'Top Kurir of the Month',title:'Top Kurir of the Month',period:'Oktober 2026',name:'Nama Kurir',subtitle:'Kurir Area',image:'logo_hg_hijau_cut.png'},
   {id:'best-delivery-moment-01',category:'Best Delivery Moment',title:'Training Kurir',period:'September 2026',name:'Jabodetabek',subtitle:'Training kurir untuk meningkatkan kompetensi & standar pelayanan kurir',image:'training-kurir.png'},
